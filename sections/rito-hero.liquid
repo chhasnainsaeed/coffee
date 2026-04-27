@@ -56,7 +56,10 @@
     <div class="rito-hero__overlay"></div>
   </div>
 
-  <div class="rito-hero__inner">
+  <div
+    class="rito-hero__inner"
+    style="padding-top: calc(max(var(--header-height, 88px), var(--header-group-height, 0px)) + clamp(56px, 5vw, 72px));"
+  >
     <div class="rito-hero__content">
       {% if section.settings.eyebrow != blank %}
         <p class="rito-hero__eyebrow">{{ section.settings.eyebrow }}</p>
