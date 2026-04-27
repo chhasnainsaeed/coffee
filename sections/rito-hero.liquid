@@ -1,0 +1,560 @@
+{% liquid
+  assign hero_collection = section.settings.collection
+  assign featured_product = blank
+
+  if hero_collection != blank and hero_collection.products_count > 0
+    assign featured_product = hero_collection.products.first
+  endif
+
+  assign hero_image = section.settings.background_image
+  if hero_image == blank and hero_collection != blank and hero_collection.featured_image != blank
+    assign hero_image = hero_collection.featured_image
+  endif
+  if hero_image == blank and featured_product != blank and featured_product.featured_media != blank
+    assign hero_image = featured_product.featured_media.preview_image
+  endif
+
+  assign card_image = section.settings.card_image
+  if card_image == blank and featured_product != blank and featured_product.featured_media != blank
+    assign card_image = featured_product.featured_media.preview_image
+  endif
+
+  assign card_title = section.settings.card_title
+  if card_title == blank and featured_product != blank
+    assign card_title = featured_product.title
+  endif
+
+  assign card_text = section.settings.card_text
+  if card_text == blank and hero_collection != blank and hero_collection.description != blank
+    assign card_text = hero_collection.description | strip_html | truncatewords: 20
+  endif
+%}
+
+<section
+  class="rito-hero color-{{ section.settings.color_scheme }}"
+  style="
+    --rito-hero-min-height: {{ section.settings.min_height }}svh;
+    --rito-hero-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  "
+>
+  <div class="rito-hero__media">
+    {% if hero_image != blank %}
+      {{
+        hero_image
+        | image_url: width: 3200
+        | image_tag:
+          widths: '900, 1200, 1600, 2000, 2600, 3200',
+          sizes: '100vw',
+          class: 'rito-hero__image',
+          alt: hero_image.alt,
+          loading: 'eager',
+          fetchpriority: 'high'
+      }}
+    {% else %}
+      <div class="rito-hero__gradient"></div>
+    {% endif %}
+    <div class="rito-hero__overlay"></div>
+  </div>
+
+  <div class="rito-hero__inner">
+    <div class="rito-hero__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="rito-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h1 class="rito-hero__heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <div class="rito-hero__subheading rte">{{ section.settings.subheading }}</div>
+      {% endif %}
+
+      <div class="rito-hero__actions">
+        {% if section.settings.primary_button_label != blank %}
+          <a class="rito-hero__button rito-hero__button--primary" href="{{ section.settings.primary_button_link | default: '#' }}">
+            {{ section.settings.primary_button_label }}
+          </a>
+        {% endif %}
+
+        {% if section.settings.secondary_button_label != blank %}
+          <a class="rito-hero__button rito-hero__button--secondary" href="{{ section.settings.secondary_button_link | default: '#' }}">
+            {{ section.settings.secondary_button_label }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="rito-hero__chips" aria-label="Brand highlights">
+        {% if section.settings.chip_1 != blank %}
+          <span class="rito-hero__chip">{{ section.settings.chip_1 }}</span>
+        {% endif %}
+        {% if section.settings.chip_2 != blank %}
+          <span class="rito-hero__chip">{{ section.settings.chip_2 }}</span>
+        {% endif %}
+        {% if section.settings.chip_3 != blank %}
+          <span class="rito-hero__chip">{{ section.settings.chip_3 }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <aside class="rito-hero__card">
+      {% if section.settings.card_eyebrow != blank %}
+        <p class="rito-hero__card-eyebrow">{{ section.settings.card_eyebrow }}</p>
+      {% endif %}
+
+      <div class="rito-hero__card-grid">
+        <div class="rito-hero__card-copy">
+          {% if card_title != blank %}
+            <h2 class="rito-hero__card-title">{{ card_title }}</h2>
+          {% endif %}
+
+          {% if card_text != blank %}
+            <p class="rito-hero__card-text">{{ card_text }}</p>
+          {% endif %}
+
+          {% if featured_product != blank %}
+            <div class="rito-hero__meta">
+              <span>{{ featured_product.price | money }}</span>
+              {% if featured_product.vendor != blank %}
+                <span>{{ featured_product.vendor }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if hero_collection != blank %}
+            <a class="rito-hero__card-link" href="{{ hero_collection.url }}">
+              Explore {{ hero_collection.title }}
+            </a>
+          {% endif %}
+        </div>
+
+        {% if card_image != blank %}
+          <div class="rito-hero__card-media">
+            {{
+              card_image
+              | image_url: width: 900
+              | image_tag:
+                widths: '360, 540, 720, 900',
+                sizes: '(min-width: 990px) 24vw, 100vw',
+                class: 'rito-hero__card-image',
+                alt: card_image.alt,
+                loading: 'lazy'
+            }}
+          </div>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% stylesheet %}
+  .rito-hero {
+    position: relative;
+    min-height: var(--rito-hero-min-height);
+    background: linear-gradient(135deg, #1d130f 0%, #3b2a21 52%, #120c09 100%);
+    color: #f7efe2;
+    overflow: clip;
+  }
+
+  .rito-hero__media,
+  .rito-hero__overlay,
+  .rito-hero__gradient {
+    position: absolute;
+    inset: 0;
+  }
+
+  .rito-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    filter: saturate(0.82) brightness(0.7);
+  }
+
+  .rito-hero__gradient {
+    background:
+      radial-gradient(circle at 78% 22%, rgb(185 122 63 / 0.18), transparent 28%),
+      linear-gradient(120deg, #261914 0%, #4a372c 54%, #201411 100%);
+  }
+
+  .rito-hero__overlay {
+    background:
+      linear-gradient(90deg, rgb(18 11 9 / 0.88) 0%, rgb(18 11 9 / 0.52) 44%, rgb(18 11 9 / 0.28) 100%);
+    opacity: var(--rito-hero-overlay-opacity);
+  }
+
+  .rito-hero__inner {
+    position: relative;
+    z-index: 1;
+    min-height: var(--rito-hero-min-height);
+    max-width: 1680px;
+    margin: 0 auto;
+    padding:
+      calc(var(--header-group-height, 88px) + 56px)
+      clamp(20px, 3.8vw, 52px)
+      clamp(32px, 5vw, 56px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.72fr);
+    gap: clamp(28px, 4vw, 56px);
+    align-items: end;
+  }
+
+  .rito-hero__content {
+    max-width: 680px;
+  }
+
+  .rito-hero__eyebrow,
+  .rito-hero__card-eyebrow {
+    margin: 0 0 14px;
+    font-size: 0.78rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #d8ae63;
+  }
+
+  .rito-hero__heading {
+    margin: 0;
+    font-size: clamp(3.5rem, 7vw, 7.2rem);
+    line-height: 0.93;
+    letter-spacing: -0.05em;
+    max-width: 10ch;
+    text-wrap: balance;
+  }
+
+  .rito-hero__subheading {
+    margin-top: 22px;
+    max-width: 560px;
+    font-size: clamp(1rem, 1.25vw, 1.16rem);
+    line-height: 1.7;
+    color: rgb(247 239 226 / 0.82);
+  }
+
+  .rito-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .rito-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 24px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.76rem;
+    font-weight: 600;
+    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+  }
+
+  .rito-hero__button:hover {
+    transform: translateY(-1px);
+  }
+
+  .rito-hero__button--primary {
+    background: linear-gradient(135deg, #d9b067 0%, #b88a42 100%);
+    color: #20120d;
+  }
+
+  .rito-hero__button--secondary {
+    border: 1px solid rgb(247 239 226 / 0.28);
+    color: #f7efe2;
+    background: rgb(255 255 255 / 0.06);
+    backdrop-filter: blur(8px);
+  }
+
+  .rito-hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+  }
+
+  .rito-hero__chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 16px;
+    border: 1px solid rgb(247 239 226 / 0.12);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.04);
+    color: rgb(247 239 226 / 0.86);
+    font-size: 0.82rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .rito-hero__card {
+    justify-self: end;
+    width: min(100%, 460px);
+    padding: clamp(22px, 2vw, 28px);
+    border: 1px solid rgb(247 239 226 / 0.12);
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgb(31 20 16 / 0.78) 0%, rgb(21 14 11 / 0.9) 100%);
+    box-shadow: 0 24px 70px rgb(0 0 0 / 0.24);
+    backdrop-filter: blur(18px);
+  }
+
+  .rito-hero__card-grid {
+    display: grid;
+    gap: 20px;
+  }
+
+  .rito-hero__card-title {
+    margin: 0;
+    font-size: clamp(1.7rem, 2vw, 2.3rem);
+    line-height: 1;
+  }
+
+  .rito-hero__card-text {
+    margin: 14px 0 0;
+    color: rgb(247 239 226 / 0.76);
+    line-height: 1.7;
+  }
+
+  .rito-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+    color: #d8ae63;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .rito-hero__card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    font-size: 0.92rem;
+    color: #f7efe2;
+    text-decoration: none;
+  }
+
+  .rito-hero__card-link::after {
+    content: '->';
+    color: #d8ae63;
+  }
+
+  .rito-hero__card-media {
+    overflow: hidden;
+    border-radius: 22px;
+    background: linear-gradient(180deg, #f8f0e4 0%, #e4d8c8 100%);
+    min-height: 240px;
+  }
+
+  .rito-hero__card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media screen and (min-width: 990px) {
+    .rito-hero__card-grid {
+      grid-template-columns: minmax(0, 1fr) 160px;
+      align-items: end;
+    }
+
+    .rito-hero__card-media {
+      min-height: 220px;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .rito-hero__inner {
+      grid-template-columns: 1fr;
+      align-items: end;
+    }
+
+    .rito-hero__card {
+      justify-self: stretch;
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .rito-hero {
+      min-height: auto;
+    }
+
+    .rito-hero__overlay {
+      background:
+        linear-gradient(180deg, rgb(18 11 9 / 0.76) 0%, rgb(18 11 9 / 0.54) 42%, rgb(18 11 9 / 0.92) 100%);
+    }
+
+    .rito-hero__inner {
+      min-height: auto;
+      padding:
+        calc(var(--header-group-height, 72px) + 44px)
+        18px
+        24px;
+      gap: 18px;
+    }
+
+    .rito-hero__heading {
+      font-size: clamp(2.7rem, 15vw, 4.4rem);
+      max-width: 8ch;
+    }
+
+    .rito-hero__subheading {
+      margin-top: 18px;
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    .rito-hero__actions {
+      margin-top: 24px;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .rito-hero__button {
+      width: 100%;
+    }
+
+    .rito-hero__chips {
+      margin-top: 20px;
+    }
+
+    .rito-hero__card {
+      border-radius: 24px;
+      padding: 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Rito Hero",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_image",
+      "label": "Feature card image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Rito Del Caffe 1937"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Luxury coffee beans for the perfect daily ritual"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Crafted with Italian warmth, roasted for depth, and designed for customers who want their everyday coffee to feel exceptional.</p>"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Primary button label",
+      "default": "Shop best sellers"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary button label",
+      "default": "Our story"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "text",
+      "id": "chip_1",
+      "label": "Highlight 1",
+      "default": "Roasted in small batches"
+    },
+    {
+      "type": "text",
+      "id": "chip_2",
+      "label": "Highlight 2",
+      "default": "Italian coffee heritage"
+    },
+    {
+      "type": "text",
+      "id": "chip_3",
+      "label": "Highlight 3",
+      "default": "Subscription available"
+    },
+    {
+      "type": "text",
+      "id": "card_eyebrow",
+      "label": "Feature card eyebrow",
+      "default": "Featured selection"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Feature card title",
+      "default": "Signature collection"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Feature card text",
+      "default": "Choose the blends our customers return to for a richer, smoother cup."
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Hero height",
+      "min": 60,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay strength",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 85
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-6"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rito Hero"
+    }
+  ]
+}
+{% endschema %}
