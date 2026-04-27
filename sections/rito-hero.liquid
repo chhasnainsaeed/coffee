@@ -190,7 +190,7 @@
     max-width: 1680px;
     margin: 0 auto;
     padding:
-      calc(var(--header-group-height, 88px) + 56px)
+      calc(max(var(--header-height, 88px), var(--header-group-height, 0px)) + 72px)
       clamp(20px, 3.8vw, 52px)
       clamp(32px, 5vw, 56px);
     display: grid;
@@ -389,7 +389,7 @@
     .rito-hero__inner {
       min-height: auto;
       padding:
-        calc(var(--header-group-height, 72px) + 44px)
+        calc(max(var(--header-height, 72px), var(--header-group-height, 0px)) + 56px)
         18px
         24px;
       gap: 18px;
