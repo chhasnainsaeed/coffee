@@ -75,7 +75,7 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<h3>Modern coffee rituals</h3>",
+                "text": "<h3>Shop our coffee</h3>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -224,8 +224,8 @@
         "horizontal_alignment": "flex-start",
         "gap": 28,
         "color_scheme": "scheme-1",
-        "padding-block-start": 72,
-        "padding-block-end": 76
+        "padding-block-start": 64,
+        "padding-block-end": 72
       }
     }
   },
