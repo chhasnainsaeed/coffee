@@ -52,10 +52,15 @@
   if product.id == empty or product == blank
     assign onboarding = true
   endif
+
+  assign modern_layout = false
+  if section and section.settings.layout_type == 'modern'
+    assign modern_layout = true
+  endif
 %}
 
 <product-card
-  class="product-card size-style"
+  class="product-card size-style{% if modern_layout %} product-card--modern{% endif %}"
   style="{% render 'size-style', settings: block_settings %}"
   data-product-id="{{ product.id }}"
   id="product-card-{{ block.id }}"
@@ -113,6 +118,15 @@
 {% stylesheet %}
   .product-card__placeholder-image svg {
     height: 100%;
+  }
+
+  .product-card--modern .product-card__link:focus-visible + .product-card__content {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: calc(var(--focus-outline-offset) * -1);
+  }
+
+  .product-card--modern .product-card__content {
+    overflow: hidden;
   }
 
   @media screen and (max-width: 749px) {

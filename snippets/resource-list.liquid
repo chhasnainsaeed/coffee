@@ -24,7 +24,7 @@
     %}
 
   Expected `settings` object properties:
-  - layout_type: 'grid' | 'bento' | 'carousel' | 'editorial'
+  - layout_type: 'grid' | 'modern' | 'bento' | 'carousel' | 'editorial'
   - columns: Number of columns for grid/carousel
   - mobile_columns: Number of columns on mobile
   - columns_gap: Gap between columns in pixels
@@ -58,7 +58,7 @@
   assign slide_width_max = '450px'
 
   case layout_type
-    when 'grid'
+    when 'grid', 'modern'
       assign resource_list_classes = 'resource-list--grid'
       capture resource_list_styles
         echo '--resource-list-column-gap-desktop: ' | append: columns_gap | append: 'px;'
@@ -112,7 +112,7 @@
   {% endif %}
 >
   {% case settings.layout_type %}
-    {% when 'grid' %}
+    {% when 'grid', 'modern' %}
       {{ list_items }}
 
     {% when 'bento' %}
