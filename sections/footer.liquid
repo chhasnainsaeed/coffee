@@ -1,250 +1,344 @@
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<div
-  class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}"
->
-  {% liquid
-    assign total_blocks = section.blocks.size
+<footer class="rito-footer" role="contentinfo" {{ section.shopify_attributes }}>
+  <div class="rito-footer__inner">
+    <div class="rito-footer__top">
+      <div class="rito-footer__brand">
+        <p class="rito-footer__brand-name">Rito Del Caff&egrave; 1937</p>
+        <p class="rito-footer__brand-copy">
+          Premium Italian-inspired coffee blends crafted for rich aroma, smooth taste, and everyday rituals.
+        </p>
+        <p class="rito-footer__brand-line">
+          Crafted for espresso, cappuccino, filter coffee, and slow morning moments.
+        </p>
+        <div class="rito-footer__badges" aria-label="Brand highlights">
+          <span class="rito-footer__badge">Italian Inspired</span>
+          <span class="rito-footer__badge">Premium Blends</span>
+          <span class="rito-footer__badge">Since 1937</span>
+        </div>
+      </div>
 
-    # Grid layout calculations
-    assign grid_columns = total_blocks | at_most: 4
+      <nav class="rito-footer__column" aria-label="Shop">
+        <h2 class="rito-footer__heading">Shop</h2>
+        <ul class="rito-footer__list">
+          <li><a href="/collections/all">All Coffee</a></li>
+          <li><a href="#">Whole Bean Coffee</a></li>
+          <li><a href="#">Ground Coffee</a></li>
+          <li><a href="#">Espresso Blends</a></li>
+          <li><a href="#">Filter Coffee</a></li>
+          <li><a href="#">Decaf Coffee</a></li>
+          <li><a href="#">Sampler Packs</a></li>
+        </ul>
+      </nav>
 
-    # Calculate last row counts using modulo arithmetic
-    # last_row_count = (total_blocks - 1) % N + 1
-    assign last_row_count = total_blocks | minus: 1 | modulo: 4 | plus: 1
-    assign tablet_last_row_count = total_blocks | minus: 1 | modulo: 2 | plus: 1
+      <nav class="rito-footer__column" aria-label="Help">
+        <h2 class="rito-footer__heading">Help</h2>
+        <ul class="rito-footer__list">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Return &amp; Refund Policy</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms &amp; Conditions</a></li>
+        </ul>
+      </nav>
 
-    # Check if there are orphaned elements (single item in last row)
-    assign has_isolated_grid_item_desktop = false
-    assign has_isolated_grid_item_tablet = false
+      <div class="rito-footer__column rito-footer__column--newsletter">
+        <h2 class="rito-footer__heading">Stay in the Ritual</h2>
+        <p class="rito-footer__muted">
+          Join our coffee club for exclusive offers, brewing tips, and new blend updates.
+        </p>
 
-    if total_blocks > 4 and last_row_count == 1
-      assign has_isolated_grid_item_desktop = true
-    endif
+        <form class="rito-footer__newsletter" onsubmit="event.preventDefault();">
+          <input
+            class="rito-footer__input"
+            type="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+            aria-label="Email address"
+          >
+          <button class="rito-footer__button" type="submit">Subscribe</button>
+        </form>
 
-    if total_blocks == 5
-      assign has_isolated_grid_item_tablet = true
-    endif
-  %}
-  <div
-    class="
-      footer-content
-      spacing-style
-      {% if has_isolated_grid_item_desktop %}footer-content--isolated-grid-item-desktop{% endif %}
-      {% if has_isolated_grid_item_tablet %}footer-content--isolated-grid-item-tablet{% endif %}
-    "
-    style="
-      {%  render 'spacing-style', settings: section.settings %}
-      --footer-gap: {{ section.settings.gap }}px;
-      --grid-columns: {{ grid_columns }};
-      --last-row-count: {{ last_row_count }};
-      --tablet-last-row-count: {{ tablet_last_row_count }};
-    "
-  >
-    {% content_for 'blocks' %}
+        <div class="rito-footer__contact">
+          <a href="mailto:hello@ritodelcaffe.com">hello@ritodelcaffe.com</a>
+          <span>United States</span>
+        </div>
+
+        <div class="rito-footer__socials" aria-label="Social links">
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">TikTok</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rito-footer__bottom">
+      <p>&copy; 2026 Rito Del Caff&egrave; 1937. All rights reserved.</p>
+      <p>Secure checkout &bull; Premium coffee &bull; Fresh aroma</p>
+    </div>
   </div>
-</div>
+</footer>
 
 {% stylesheet %}
-  .footer-content {
-    contain: content;
-    content-visibility: auto;
+  .rito-footer {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    overflow: hidden;
+    background: #1f130d;
+    color: #ffffff;
+    padding: 80px 40px 32px;
+  }
+
+  .rito-footer::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -80px;
+    width: 360px;
+    height: 360px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(184, 135, 70, 0.2) 0%, rgba(184, 135, 70, 0) 72%);
+    pointer-events: none;
+  }
+
+  .rito-footer__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .rito-footer__top {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--footer-gap);
+    grid-template-columns: 1.45fr 0.85fr 0.85fr 1.1fr;
+    gap: 36px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  @media screen and (min-width: 750px) and (max-width: 989px) {
-    .footer-content {
-      grid-template-columns: repeat(min(var(--grid-columns), 3), 1fr);
-      grid-auto-flow: row;
-    }
+  .rito-footer__brand-name {
+    margin: 0;
+    color: #ffffff;
+    font-family: var(--font-heading--family);
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
 
-    .footer-content[style*='--grid-columns: 4'] {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .rito-footer__brand-copy,
+  .rito-footer__brand-line,
+  .rito-footer__muted,
+  .rito-footer__contact,
+  .rito-footer__contact a {
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 15px;
+    line-height: 1.75;
+  }
 
-    .footer-content--isolated-grid-item-tablet > :last-child {
-      grid-column: 1 / -1;
+  .rito-footer__brand-copy {
+    margin: 18px 0 0;
+    max-width: 38ch;
+  }
+
+  .rito-footer__brand-line {
+    margin: 14px 0 0;
+    max-width: 40ch;
+  }
+
+  .rito-footer__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .rito-footer__badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 14px;
+    border: 1px solid rgba(184, 135, 70, 0.28);
+    border-radius: 999px;
+    color: #d9b67d;
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .rito-footer__heading {
+    margin: 0 0 16px;
+    color: #ffffff;
+    font-family: var(--font-heading--family);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .rito-footer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .rito-footer__list a,
+  .rito-footer__socials a,
+  .rito-footer__contact a {
+    color: rgba(255, 255, 255, 0.72);
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+
+  .rito-footer__list a:hover,
+  .rito-footer__socials a:hover,
+  .rito-footer__contact a:hover {
+    color: #b88746;
+  }
+
+  .rito-footer__newsletter {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .rito-footer__input {
+    width: 100%;
+    height: 50px;
+    padding: 0 18px;
+    border: 1px solid #3a2a20;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    font-size: 15px;
+  }
+
+  .rito-footer__input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .rito-footer__input:focus {
+    outline: 2px solid rgba(184, 135, 70, 0.35);
+    outline-offset: 2px;
+  }
+
+  .rito-footer__button {
+    height: 50px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 999px;
+    background: #b88746;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.25s ease;
+  }
+
+  .rito-footer__button:hover,
+  .rito-footer__button:focus-visible {
+    background: #9a6a43;
+    transform: translateY(-1px);
+  }
+
+  .rito-footer__contact {
+    display: grid;
+    gap: 2px;
+    margin-top: 18px;
+  }
+
+  .rito-footer__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .rito-footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-top: 34px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .rito-footer__bottom p {
+    margin: 0;
+  }
+
+  @media screen and (max-width: 899px) {
+    .rito-footer__top {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media screen and (min-width: 990px) {
-    .footer-content {
-      grid-template-columns: repeat(var(--grid-columns), 1fr);
+  @media screen and (max-width: 639px) {
+    .rito-footer {
+      padding: 64px 18px 28px;
     }
 
-    /* Single item centered */
-    .footer-content[style*='--grid-columns: 1'] {
-      justify-items: center;
+    .rito-footer__top {
+      grid-template-columns: 1fr;
+      gap: 28px;
     }
 
-    .footer-content--isolated-grid-item-desktop > :last-child {
-      grid-column: 1 / -1;
+    .rito-footer__newsletter {
+      grid-template-columns: 1fr;
+    }
+
+    .rito-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:names.footer",
+  "name": "Rito Footer",
+  "tag": "section",
   "class": "section-wrapper",
-  "blocks": [
-    {
-      "type": "_divider"
-    },
-    {
-      "type": "@app"
-    },
-    {
-      "type": "button"
-    },
-    {
-      "type": "follow-on-shop"
-    },
-    {
-      "type": "group"
-    },
-    {
-      "type": "icon"
-    },
-    {
-      "type": "image"
-    },
-    {
-      "type": "menu"
-    },
-    {
-      "type": "payment-icons"
-    },
-    {
-      "type": "text"
-    },
-    {
-      "type": "logo"
-    },
-    {
-      "type": "jumbo-text"
-    },
-    {
-      "type": "social-links"
-    },
-    {
-      "type": "email-signup"
-    }
-  ],
   "enabled_on": {
     "groups": ["footer"]
   },
   "settings": [
     {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "page-width",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "page-width"
-    },
-    {
-      "type": "range",
-      "id": "gap",
-      "label": "t:settings.gap",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
-    },
-    {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
-    },
+      "label": "Color scheme",
+      "default": "scheme-5"
+    }
+  ],
+  "blocks": [
     {
-      "type": "header",
-      "content": "t:content.padding"
-    },
-    {
-      "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 20
+      "type": "trust",
+      "name": "Trust point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Premium Italian-inspired blends"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "t:names.footer",
-      "category": "t:categories.footer",
-      "settings": {
-        "gap": 20,
-        "color_scheme": "scheme-1",
-        "padding-block-start": 36,
-        "padding-block-end": 36
-      },
-      "blocks": {
-        "newsletter-group": {
-          "type": "group",
-          "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "gap": 6,
-            "width": "fill",
-            "inherit_color_scheme": true
-          },
-          "blocks": {
-            "newsletter-heading": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.join_our_email_list",
-                "width": "100%",
-                "alignment": "left",
-                "type_preset": "h3"
-              }
-            },
-            "newsletter-text": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.get_exclusive_deals_and_early_access_to_new_products",
-                "width": "100%",
-                "alignment": "left",
-                "type_preset": "rte"
-              }
-            }
-          },
-          "block_order": ["newsletter-heading", "newsletter-text"]
-        },
-        "newsletter-form": {
-          "type": "email-signup",
-          "settings": {
-            "width": "fill"
-          }
-        }
-      },
-      "block_order": ["newsletter-group", "newsletter-form"]
+      "name": "Rito Footer",
+      "category": "Footer"
     }
   ]
 }

@@ -1,0 +1,717 @@
+<section class="coffee-type-categories color-{{ section.settings.color_scheme }}">
+  <div class="coffee-type-categories__inner">
+    <div class="coffee-type-categories__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="coffee-type-categories__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class="coffee-type-categories__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="coffee-type-categories__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="coffee-type-categories__grid">
+      {% for block in section.blocks %}
+        {% liquid
+          assign card_image = block.settings.image
+          assign card_link = block.settings.link
+          assign title_handle = block.settings.title | handleize
+          assign card_class = 'coffee-type-categories__card'
+          assign button_label = block.settings.button_label | default: 'Shop Now'
+
+          if forloop.index == 1
+            assign card_class = card_class | append: ' coffee-type-categories__card--featured'
+            assign button_label = block.settings.button_label | default: 'Explore Whole Beans'
+          elsif forloop.index == 6
+            assign card_class = card_class | append: ' coffee-type-categories__card--sampler'
+            assign button_label = block.settings.button_label | default: 'Build Your Sampler'
+          else
+            assign card_class = card_class | append: ' coffee-type-categories__card--compact'
+          endif
+
+          if card_link == blank and block.settings.collection != blank
+            assign card_link = block.settings.collection.url
+          endif
+
+          if card_image == blank and block.settings.collection != blank
+            assign card_image = block.settings.collection.featured_image
+          endif
+
+          if card_image == blank and block.settings.collection != blank and block.settings.collection.products_count > 0
+            assign fallback_product = block.settings.collection.products.first
+            if fallback_product.featured_media != blank
+              assign card_image = fallback_product.featured_media.preview_image
+            endif
+          endif
+        %}
+
+        <article class="{{ card_class }}" {{ block.shopify_attributes }}>
+          {% if forloop.index == 6 %}
+            <div class="coffee-type-categories__sampler-content">
+              <div class="coffee-type-categories__copy">
+                <p class="coffee-type-categories__kicker">Curated tasting journey</p>
+                <h3 class="coffee-type-categories__title">{{ block.settings.title }}</h3>
+                {% if block.settings.description != blank %}
+                  <p class="coffee-type-categories__description">{{ block.settings.description }}</p>
+                {% endif %}
+                <a class="coffee-type-categories__button coffee-type-categories__button--gold" href="{{ card_link | default: '#' }}">
+                  <span>{{ button_label }}</span>
+                  <span class="coffee-type-categories__button-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M5 12h12m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+
+              <a class="coffee-type-categories__sampler-visual" href="{{ card_link | default: '#' }}" aria-label="{{ block.settings.title | escape }}">
+                {% if card_image != blank %}
+                  {{
+                    card_image
+                    | image_url: width: 1400
+                    | image_tag:
+                      class: 'coffee-type-categories__image coffee-type-categories__image--sampler',
+                      widths: '560, 720, 960, 1200, 1400',
+                      sizes: '(min-width: 1100px) 40vw, 100vw',
+                      alt: card_image.alt | default: block.settings.title,
+                      loading: 'lazy'
+                  }}
+                {% else %}
+                  <div class="coffee-type-categories__placeholder coffee-type-categories__placeholder--sampler">
+                    <svg class="coffee-type-categories__placeholder-art" viewBox="0 0 720 360" fill="none" aria-hidden="true">
+                      <rect x="120" y="156" width="116" height="148" rx="24" fill="#E7D2BB"/>
+                      <rect x="216" y="120" width="128" height="184" rx="28" fill="#D9B88F"/>
+                      <rect x="332" y="148" width="116" height="156" rx="24" fill="#E7D2BB"/>
+                      <rect x="438" y="110" width="132" height="194" rx="28" fill="#C69B62"/>
+                      <path d="M146 188h64M246 162h70M360 178h60M468 154h72" stroke="#7B4D2A" stroke-width="8" stroke-linecap="round"/>
+                      <circle cx="180" cy="236" r="18" fill="#6E4427"/>
+                      <circle cx="280" cy="214" r="20" fill="#6E4427"/>
+                      <circle cx="388" cy="234" r="18" fill="#6E4427"/>
+                      <circle cx="510" cy="212" r="20" fill="#6E4427"/>
+                      <path d="M180 222c8 10 8 16 0 28M280 198c8 10 8 16 0 28M388 220c8 10 8 16 0 28M510 196c8 10 8 16 0 28" stroke="#F5EBDD" stroke-width="5" stroke-linecap="round"/>
+                      <ellipse cx="352" cy="320" rx="184" ry="22" fill="rgba(0,0,0,0.12)"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              </a>
+            </div>
+          {% else %}
+            <a class="coffee-type-categories__panel-link" href="{{ card_link | default: '#' }}" aria-label="{{ block.settings.title | escape }}">
+              <div class="coffee-type-categories__media coffee-type-categories__media--{{ title_handle }}">
+                {% if card_image != blank %}
+                  {{
+                    card_image
+                    | image_url: width: 1400
+                    | image_tag:
+                      class: 'coffee-type-categories__image',
+                      widths: '480, 720, 960, 1200, 1400',
+                      sizes: '(min-width: 1100px) 33vw, (min-width: 750px) 50vw, 100vw',
+                      alt: card_image.alt | default: block.settings.title,
+                      loading: 'lazy'
+                  }}
+                {% else %}
+                  <div class="coffee-type-categories__placeholder">
+                    {% case title_handle %}
+                      {% when 'whole-bean-coffee' %}
+                        <svg class="coffee-type-categories__placeholder-art coffee-type-categories__placeholder-art--featured" viewBox="0 0 720 720" fill="none" aria-hidden="true">
+                          <ellipse cx="170" cy="590" rx="96" ry="44" fill="rgba(42,27,18,.18)"/>
+                          <ellipse cx="292" cy="622" rx="58" ry="26" fill="rgba(42,27,18,.14)"/>
+                          <rect x="228" y="114" width="292" height="412" rx="42" fill="#E4CCAF"/>
+                          <path d="M264 178c24-40 68-60 112-60 46 0 90 20 112 60" stroke="#8B5E3C" stroke-width="14" stroke-linecap="round"/>
+                          <path d="M286 236h176" stroke="#B88746" stroke-width="14" stroke-linecap="round"/>
+                          <path d="M307 308c36 23 112 23 148 0" stroke="#8B5E3C" stroke-width="11" stroke-linecap="round"/>
+                          <path d="M376 206c-38 14-60 54-60 98 0 54 28 98 61 98 34 0 62-44 62-98 0-44-24-84-63-98Z" fill="#6E4427"/>
+                          <path d="M376 230c18 28 20 94 0 150" stroke="#EADBC7" stroke-width="8" stroke-linecap="round"/>
+                          <ellipse cx="178" cy="548" rx="60" ry="34" fill="#8B5E3C"/>
+                          <path d="M178 530c12 16 12 24 0 38" stroke="#F5EBDD" stroke-width="7" stroke-linecap="round"/>
+                          <ellipse cx="520" cy="552" rx="52" ry="30" fill="#9A6A43"/>
+                          <path d="M520 536c11 14 11 22 0 32" stroke="#F5EBDD" stroke-width="6" stroke-linecap="round"/>
+                          <ellipse cx="590" cy="600" rx="34" ry="20" fill="#7D5430"/>
+                          <path d="M590 588c8 10 8 16 0 24" stroke="#F5EBDD" stroke-width="4.5" stroke-linecap="round"/>
+                        </svg>
+                      {% when 'espresso-blends' %}
+                        <svg class="coffee-type-categories__placeholder-art" viewBox="0 0 480 320" fill="none" aria-hidden="true">
+                          <rect x="110" y="156" width="170" height="88" rx="26" fill="#FAF3EA" stroke="#8B5E3C" stroke-width="8"/>
+                          <path d="M278 174h34c24 0 44 20 44 44 0 24-20 44-44 44h-34" stroke="#8B5E3C" stroke-width="8"/>
+                          <path d="M143 156c10-34 32-56 51-56 20 0 42 22 52 56" fill="#6E4427"/>
+                          <path d="M143 156c10-34 32-56 51-56 20 0 42 22 52 56" stroke="#6E4427" stroke-width="8"/>
+                          <path d="M174 86c-10-18 12-35 6-54" stroke="#B88746" stroke-width="6" stroke-linecap="round"/>
+                          <path d="M220 80c-10-18 12-35 6-54" stroke="#B88746" stroke-width="6" stroke-linecap="round"/>
+                          <path d="M266 86c-10-18 12-35 6-54" stroke="#B88746" stroke-width="6" stroke-linecap="round"/>
+                          <path d="M116 264h244" stroke="#C9A783" stroke-width="8" stroke-linecap="round"/>
+                        </svg>
+                      {% when 'ground-coffee' %}
+                        <svg class="coffee-type-categories__placeholder-art" viewBox="0 0 480 320" fill="none" aria-hidden="true">
+                          <path d="M106 216c0-34 54-58 134-58 79 0 134 24 134 58 0 16-7 31-22 44H128c-15-13-22-28-22-44Z" fill="#6E4427"/>
+                          <path d="M138 154c0-40 45-72 102-72 57 0 102 32 102 72" stroke="#8B5E3C" stroke-width="8"/>
+                          <rect x="264" y="102" width="126" height="34" rx="16" transform="rotate(22 264 102)" fill="#B88746"/>
+                          <rect x="316" y="130" width="56" height="24" rx="12" transform="rotate(22 316 130)" fill="#E7D2BB"/>
+                          <path d="M160 192c18 14 45 22 78 22 31 0 59-8 78-22" stroke="#E9D8C2" stroke-width="7" stroke-linecap="round"/>
+                          <path d="M126 266h228" stroke="#C9A783" stroke-width="8" stroke-linecap="round"/>
+                        </svg>
+                      {% when 'filter-coffee' %}
+                        <svg class="coffee-type-categories__placeholder-art" viewBox="0 0 480 320" fill="none" aria-hidden="true">
+                          <path d="M138 72h204l-28 54H166l-28-54Z" fill="#E7D2BB" stroke="#8B5E3C" stroke-width="8" stroke-linejoin="round"/>
+                          <path d="M166 126h148l-50 122h-48l-50-122Z" fill="#FAF3EA" stroke="#8B5E3C" stroke-width="8" stroke-linejoin="round"/>
+                          <path d="M190 172c20 14 74 14 94 0" stroke="#B88746" stroke-width="7" stroke-linecap="round"/>
+                          <path d="M208 148c10 22 46 22 56 0" stroke="#B88746" stroke-width="7" stroke-linecap="round"/>
+                          <rect x="180" y="250" width="120" height="26" rx="13" fill="#6E4427"/>
+                          <path d="M116 286h248" stroke="#C9A783" stroke-width="8" stroke-linecap="round"/>
+                        </svg>
+                      {% when 'decaf-coffee' %}
+                        <svg class="coffee-type-categories__placeholder-art" viewBox="0 0 480 320" fill="none" aria-hidden="true">
+                          <circle cx="238" cy="168" r="98" fill="#FAF3EA" stroke="#8B5E3C" stroke-width="8"/>
+                          <path d="M188 194c18 14 35 20 50 20 15 0 31-6 52-22" stroke="#9A6A43" stroke-width="8" stroke-linecap="round"/>
+                          <path d="M202 140c12-13 24-20 37-20 12 0 25 7 37 20" stroke="#B88746" stroke-width="8" stroke-linecap="round"/>
+                          <path d="M170 74c-9-18 12-35 6-55" stroke="#B88746" stroke-width="6" stroke-linecap="round"/>
+                          <circle cx="354" cy="92" r="32" fill="#E7D2BB"/>
+                          <path d="M340 92h28" stroke="#8B5E3C" stroke-width="6" stroke-linecap="round"/>
+                          <path d="M354 78v28" stroke="#8B5E3C" stroke-width="6" stroke-linecap="round"/>
+                        </svg>
+                      {% else %}
+                        <svg class="coffee-type-categories__placeholder-art" viewBox="0 0 480 320" fill="none" aria-hidden="true">
+                          <rect x="146" y="76" width="188" height="198" rx="34" fill="#E4CCAF"/>
+                          <path d="M180 124h120" stroke="#8B5E3C" stroke-width="8" stroke-linecap="round"/>
+                          <path d="M190 182c22 20 42 29 50 29 15 0 38-13 56-32" stroke="#6E4427" stroke-width="8" stroke-linecap="round"/>
+                          <path d="M142 284h196" stroke="#C9A783" stroke-width="8" stroke-linecap="round"/>
+                        </svg>
+                    {% endcase %}
+                  </div>
+                {% endif %}
+
+                <div class="coffee-type-categories__overlay"></div>
+                <div class="coffee-type-categories__content coffee-type-categories__content--overlay">
+                  {% if forloop.index == 1 %}
+                    <p class="coffee-type-categories__kicker">Signature staple</p>
+                  {% endif %}
+                  <h3 class="coffee-type-categories__title">{{ block.settings.title }}</h3>
+                  {% if block.settings.description != blank %}
+                    <p class="coffee-type-categories__description">{{ block.settings.description }}</p>
+                  {% endif %}
+                  <span class="coffee-type-categories__button">
+                    <span>{{ button_label }}</span>
+                    <span class="coffee-type-categories__button-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M5 12h12m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                      </svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </a>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .coffee-type-categories {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    overflow: hidden;
+    background: linear-gradient(180deg, #fbf7f1 0%, #f1e2d1 100%);
+    padding: 100px 40px;
+  }
+
+  .coffee-type-categories::before,
+  .coffee-type-categories::after {
+    content: '';
+    position: absolute;
+    inset: auto;
+    pointer-events: none;
+  }
+
+  .coffee-type-categories::before {
+    top: 84px;
+    left: -100px;
+    width: 420px;
+    height: 420px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(123, 77, 42, 0.16) 0%, rgba(123, 77, 42, 0) 72%);
+  }
+
+  .coffee-type-categories::after {
+    right: -70px;
+    bottom: 48px;
+    width: 360px;
+    height: 360px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(184, 135, 70, 0.14) 0%, rgba(184, 135, 70, 0) 72%);
+  }
+
+  .coffee-type-categories__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .coffee-type-categories__header {
+    max-width: 720px;
+    margin-bottom: 44px;
+  }
+
+  .coffee-type-categories__eyebrow {
+    margin: 0 0 12px;
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .coffee-type-categories__heading {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: clamp(42px, 5vw, 68px);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+
+  .coffee-type-categories__subheading {
+    margin: 18px 0 0;
+    color: #7a6a5c;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .coffee-type-categories__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr 0.9fr;
+    gap: 28px;
+  }
+
+  .coffee-type-categories__card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(232, 222, 210, 0.95);
+    border-radius: 32px;
+    background: #ffffff;
+    box-shadow: 0 24px 70px rgba(42, 27, 18, 0.1);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .coffee-type-categories__card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(184, 135, 70, 0.34);
+    box-shadow: 0 32px 82px rgba(42, 27, 18, 0.14);
+  }
+
+  .coffee-type-categories__card--featured {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    min-height: 560px;
+  }
+
+  .coffee-type-categories__card--compact {
+    min-height: 260px;
+  }
+
+  .coffee-type-categories__card--sampler {
+    grid-column: 1 / -1;
+    min-height: 300px;
+    background:
+      radial-gradient(circle at 82% 28%, rgba(184, 135, 70, 0.22), rgba(184, 135, 70, 0) 34%),
+      linear-gradient(180deg, #2a1b12 0%, #1c120c 100%);
+    border-color: rgba(93, 62, 38, 0.7);
+  }
+
+  .coffee-type-categories__panel-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .coffee-type-categories__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 28% 20%, rgba(255, 249, 241, 0.84), rgba(255, 249, 241, 0) 34%),
+      linear-gradient(180deg, #f6ecdf 0%, #ead7c2 100%);
+  }
+
+  .coffee-type-categories__card--featured .coffee-type-categories__media {
+    min-height: 560px;
+  }
+
+  .coffee-type-categories__card--compact .coffee-type-categories__media {
+    min-height: 260px;
+  }
+
+  .coffee-type-categories__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(32, 20, 14, 0.04) 0%, rgba(32, 20, 14, 0.14) 46%, rgba(20, 12, 8, 0.78) 100%);
+  }
+
+  .coffee-type-categories__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+  }
+
+  .coffee-type-categories__image--sampler {
+    object-fit: contain;
+    padding: 22px 28px;
+  }
+
+  .coffee-type-categories__card:hover .coffee-type-categories__image,
+  .coffee-type-categories__card:hover .coffee-type-categories__placeholder-art {
+    transform: scale(1.05);
+  }
+
+  .coffee-type-categories__placeholder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 28px;
+  }
+
+  .coffee-type-categories__placeholder--sampler {
+    padding: 18px 20px 10px;
+  }
+
+  .coffee-type-categories__placeholder-art {
+    width: 100%;
+    height: 100%;
+    color: rgba(122, 77, 42, 0.96);
+    transition: transform 0.45s ease;
+  }
+
+  .coffee-type-categories__placeholder-art--featured {
+    width: 102%;
+    height: 102%;
+  }
+
+  .coffee-type-categories__content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .coffee-type-categories__content--overlay {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 28px 28px 30px;
+    color: #f8efe5;
+  }
+
+  .coffee-type-categories__copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 36px 38px;
+  }
+
+  .coffee-type-categories__kicker {
+    margin: 0 0 12px;
+    color: #d6b081;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .coffee-type-categories__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+
+  .coffee-type-categories__card--featured .coffee-type-categories__title {
+    font-size: 34px;
+  }
+
+  .coffee-type-categories__card--sampler .coffee-type-categories__title {
+    color: #fff6ea;
+    font-size: 34px;
+  }
+
+  .coffee-type-categories__description {
+    margin: 12px 0 0;
+    max-width: 34ch;
+    color: rgba(250, 241, 232, 0.88);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .coffee-type-categories__card--sampler .coffee-type-categories__description {
+    color: rgba(248, 239, 229, 0.76);
+    max-width: 44ch;
+  }
+
+  .coffee-type-categories__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    color: #fff3e5;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .coffee-type-categories__button--gold {
+    color: #1f130d;
+    width: fit-content;
+    padding: 14px 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #e0b972 0%, #b88746 100%);
+  }
+
+  .coffee-type-categories__button-icon {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+  }
+
+  .coffee-type-categories__button-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .coffee-type-categories__sampler-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(280px, 0.96fr);
+    min-height: 300px;
+  }
+
+  .coffee-type-categories__sampler-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  @media screen and (max-width: 1099px) {
+    .coffee-type-categories__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .coffee-type-categories__card--featured,
+    .coffee-type-categories__card--sampler {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .coffee-type-categories {
+      padding: 70px 18px;
+    }
+
+    .coffee-type-categories__header {
+      margin-bottom: 34px;
+    }
+
+    .coffee-type-categories__heading {
+      font-size: 38px;
+    }
+
+    .coffee-type-categories__grid {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .coffee-type-categories__card--featured,
+    .coffee-type-categories__card--compact {
+      min-height: 240px;
+    }
+
+    .coffee-type-categories__card--featured .coffee-type-categories__media {
+      min-height: 440px;
+    }
+
+    .coffee-type-categories__card--compact .coffee-type-categories__media {
+      min-height: 240px;
+    }
+
+    .coffee-type-categories__sampler-content {
+      grid-template-columns: 1fr;
+    }
+
+    .coffee-type-categories__copy {
+      padding: 28px 24px 10px;
+    }
+
+    .coffee-type-categories__sampler-visual {
+      min-height: 220px;
+    }
+
+    .coffee-type-categories__content--overlay {
+      padding: 24px 22px 24px;
+    }
+
+    .coffee-type-categories__card--featured .coffee-type-categories__title,
+    .coffee-type-categories__card--sampler .coffee-type-categories__title {
+      font-size: 30px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Coffee Types",
+  "tag": "section",
+  "class": "section-wrapper",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "EXPLORE CATEGORIES"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by Coffee Type"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover Italian coffee crafted for your ritual — from bold espresso to smooth filter blends and curated sampler packs."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Whole Bean Coffee"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Rich, aromatic beans for customers who want the freshest grind at home."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop Now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coffee Types",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Whole Bean Coffee",
+            "description": "Rich, aromatic beans for customers who want the freshest grind at home.",
+            "button_label": "Explore Whole Beans"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Espresso Blends",
+            "description": "Dark, balanced blends crafted for a dense crema and a smooth Italian finish.",
+            "button_label": "Shop Now"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Ground Coffee",
+            "description": "Convenient and flavorful coffee prepared for easy brewing without compromise.",
+            "button_label": "Shop Now"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Filter Coffee",
+            "description": "Clean, layered profiles tailored for pour-over, drip, and everyday slow brewing.",
+            "button_label": "Shop Now"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Decaf Coffee",
+            "description": "Full-bodied taste with a softer caffeine profile for evening rituals and gentle cups.",
+            "button_label": "Shop Now"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Sampler Packs",
+            "description": "A curated tasting journey through signature blends, origins, and roast expressions.",
+            "button_label": "Build Your Sampler"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,342 @@
+<section class="rito-brewing-rituals color-{{ section.settings.color_scheme }}">
+  <div class="rito-brewing-rituals__inner">
+    <div class="rito-brewing-rituals__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="rito-brewing-rituals__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class="rito-brewing-rituals__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="rito-brewing-rituals__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="rito-brewing-rituals__grid">
+      {% for block in section.blocks %}
+        {% liquid
+          assign title_handle = block.settings.title | handleize
+          assign card_number = forloop.index | prepend: '0'
+        %}
+        <article class="rito-brewing-rituals__card" {{ block.shopify_attributes }}>
+          <div class="rito-brewing-rituals__visual">
+            <div class="rito-brewing-rituals__badge">
+              {% case title_handle %}
+                {% when 'espresso' %}
+                  <svg class="rito-brewing-rituals__icon" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <rect x="20" y="48" width="48" height="30" rx="10" stroke="currentColor" stroke-width="5"/>
+                    <path d="M68 55h10c9 0 16 7 16 16s-7 16-16 16H68" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M30 48c3-13 11-22 18-22 8 0 15 9 18 22" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="5"/>
+                    <path d="M41 21c-5-9 5-15 2-22" stroke="#B88746" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M58 18c-5-9 5-15 2-22" stroke="#B88746" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M22 90h70" stroke="#B88746" stroke-width="5" stroke-linecap="round"/>
+                  </svg>
+                {% when 'cappuccino' %}
+                  <svg class="rito-brewing-rituals__icon" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M25 56c0-12 10-22 22-22h23c12 0 22 10 22 22v14c0 12-10 22-22 22H47c-12 0-22-10-22-22V56Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="5"/>
+                    <path d="M92 48h6c10 0 18 8 18 18s-8 18-18 18h-6" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M40 41c4-8 10-11 18-11 9 0 15 4 20 12" stroke="#B88746" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M30 98h70" stroke="#B88746" stroke-width="5" stroke-linecap="round"/>
+                  </svg>
+                {% when 'filter-coffee' %}
+                  <svg class="rito-brewing-rituals__icon" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M28 20h64l-9 18H37L28 20Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M37 38h46L68 80H52L37 38Z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+                    <rect x="44" y="82" width="32" height="12" rx="6" fill="currentColor"/>
+                    <path d="M20 100h80" stroke="#B88746" stroke-width="5" stroke-linecap="round"/>
+                  </svg>
+                {% else %}
+                  <svg class="rito-brewing-rituals__icon" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M36 24c15 0 27 12 27 27v12c0 19-15 34-34 34H21V39c0-8 7-15 15-15Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="5"/>
+                    <path d="M61 34h10c16 0 29 13 29 29v34H63" stroke="currentColor" stroke-width="5"/>
+                    <path d="M27 100h74" stroke="#B88746" stroke-width="5" stroke-linecap="round"/>
+                  </svg>
+              {% endcase %}
+            </div>
+            <span class="rito-brewing-rituals__accent"></span>
+          </div>
+
+          <div class="rito-brewing-rituals__content">
+            <p class="rito-brewing-rituals__number">{{ card_number }}</p>
+            <h3 class="rito-brewing-rituals__title">{{ block.settings.title }}</h3>
+            <p class="rito-brewing-rituals__description">{{ block.settings.description }}</p>
+            {% if block.settings.best_for != blank %}
+              <p class="rito-brewing-rituals__best-for">Best for: <span>{{ block.settings.best_for }}</span></p>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .rito-brewing-rituals {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    background: linear-gradient(180deg, #ffffff 0%, #f8f3ec 100%);
+    padding: 100px 40px;
+  }
+
+  .rito-brewing-rituals__inner {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .rito-brewing-rituals__header {
+    max-width: 760px;
+    margin: 0 auto 44px;
+    text-align: center;
+  }
+
+  .rito-brewing-rituals__eyebrow {
+    margin: 0 0 12px;
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .rito-brewing-rituals__heading {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .rito-brewing-rituals__subheading {
+    margin: 18px auto 0;
+    color: #7a6a5c;
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 760px;
+  }
+
+  .rito-brewing-rituals__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .rito-brewing-rituals__card {
+    min-height: 320px;
+    padding: 34px;
+    border: 1px solid #e8ded2;
+    border-radius: 28px;
+    background: #ffffff;
+    box-shadow: 0 22px 60px rgba(42, 27, 18, 0.08);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .rito-brewing-rituals__card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(184, 135, 70, 0.55);
+    box-shadow: 0 30px 72px rgba(42, 27, 18, 0.12);
+  }
+
+  .rito-brewing-rituals__visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 28px;
+  }
+
+  .rito-brewing-rituals__badge {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 92px;
+    height: 92px;
+    border-radius: 999px;
+    background: #f3e3cf;
+    color: #2a1b12;
+    box-shadow: inset 0 0 0 1px rgba(184, 135, 70, 0.16);
+  }
+
+  .rito-brewing-rituals__icon {
+    width: 62px;
+    height: 62px;
+    display: block;
+  }
+
+  .rito-brewing-rituals__accent {
+    position: absolute;
+    left: 62px;
+    top: 8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #d7ae69 0%, #b88746 100%);
+    box-shadow: 0 0 0 8px rgba(184, 135, 70, 0.12);
+  }
+
+  .rito-brewing-rituals__number {
+    margin: 0 0 10px;
+    color: #b88746;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .rito-brewing-rituals__title {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .rito-brewing-rituals__description {
+    margin: 14px 0 0;
+    color: #7a6a5c;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .rito-brewing-rituals__best-for {
+    margin: 18px 0 0;
+    color: #7a6a5c;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .rito-brewing-rituals__best-for span {
+    color: #2a1b12;
+    font-weight: 700;
+  }
+
+  @media screen and (max-width: 1099px) {
+    .rito-brewing-rituals__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .rito-brewing-rituals {
+      padding: 64px 18px;
+    }
+
+    .rito-brewing-rituals__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rito-brewing-rituals__card {
+      min-height: 0;
+      padding: 28px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Rito Brewing Rituals",
+  "tag": "section",
+  "class": "section-wrapper",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "BREWING RITUALS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Brew It Your Way"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtitle",
+      "default": "From bold espresso to smooth filter coffee, discover the perfect brewing ritual for every Rito Del Caffe blend."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "method",
+      "name": "Brewing card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Espresso"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Rich, bold, and intense with a golden crema."
+        },
+        {
+          "type": "text",
+          "id": "best_for",
+          "label": "Best for",
+          "default": "L'Espresso"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rito Brewing Rituals",
+      "blocks": [
+        {
+          "type": "method",
+          "settings": {
+            "title": "Espresso",
+            "description": "Rich, bold, and intense with a golden crema.",
+            "best_for": "L'Espresso"
+          }
+        },
+        {
+          "type": "method",
+          "settings": {
+            "title": "Cappuccino",
+            "description": "Smooth, creamy, and perfect with steamed milk.",
+            "best_for": "Il Cappuccino"
+          }
+        },
+        {
+          "type": "method",
+          "settings": {
+            "title": "Filter Coffee",
+            "description": "Clean, balanced, and ideal for everyday brewing.",
+            "best_for": "Il Filtro"
+          }
+        },
+        {
+          "type": "method",
+          "settings": {
+            "title": "Turkish Style",
+            "description": "Deep, aromatic, and traditionally prepared.",
+            "best_for": "Il Sultano"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,395 @@
+<section class="rito-coffee-moments color-{{ section.settings.color_scheme }}">
+  <div class="rito-coffee-moments__inner">
+    <div class="rito-coffee-moments__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="rito-coffee-moments__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class="rito-coffee-moments__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="rito-coffee-moments__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="rito-coffee-moments__grid">
+      {% for block in section.blocks %}
+        {% liquid
+          assign label_handle = block.settings.label | handleize
+          assign card_class = 'rito-coffee-moments__card'
+          if forloop.first
+            assign card_class = card_class | append: ' rito-coffee-moments__card--large'
+          endif
+        %}
+        <article class="{{ card_class }}" {{ block.shopify_attributes }}>
+          <div class="rito-coffee-moments__media">
+            {% if block.settings.image != blank %}
+              {{
+                block.settings.image
+                | image_url: width: 1600
+                | image_tag:
+                  class: 'rito-coffee-moments__image',
+                  widths: '480, 720, 960, 1200, 1600',
+                  sizes: '(min-width: 1100px) 25vw, (min-width: 750px) 50vw, 100vw',
+                  alt: block.settings.label | default: section.settings.heading,
+                  loading: 'lazy'
+              }}
+            {% else %}
+              <div class="rito-coffee-moments__placeholder" aria-hidden="true">
+                {% case label_handle %}
+                  {% when 'morning-espresso' %}
+                    <svg class="rito-coffee-moments__placeholder-art" viewBox="0 0 900 900" fill="none">
+                      <rect width="900" height="900" fill="#E9D6BF"/>
+                      <circle cx="432" cy="492" r="224" fill="#FBF5EE"/>
+                      <circle cx="432" cy="492" r="168" fill="#6D4428"/>
+                      <circle cx="432" cy="492" r="138" fill="#8B5E3C"/>
+                      <path d="M328 336c38-64 80-94 138-94 58 0 102 30 140 98" stroke="#C59A63" stroke-width="18" stroke-linecap="round"/>
+                      <ellipse cx="734" cy="496" rx="64" ry="86" fill="none" stroke="#FBF5EE" stroke-width="26"/>
+                      <rect x="114" y="650" width="612" height="42" rx="21" fill="#B88746" fill-opacity=".35"/>
+                    </svg>
+                  {% when 'freshly-roasted' %}
+                    <svg class="rito-coffee-moments__placeholder-art" viewBox="0 0 700 520" fill="none">
+                      <rect width="700" height="520" fill="#F2E2CE"/>
+                      <ellipse cx="200" cy="290" rx="92" ry="56" fill="#7C5130"/>
+                      <path d="M200 254c20 24 20 38 0 72" stroke="#F8EEE4" stroke-width="10" stroke-linecap="round"/>
+                      <ellipse cx="348" cy="214" rx="86" ry="50" fill="#8B5E3C"/>
+                      <path d="M348 184c18 22 18 34 0 62" stroke="#F8EEE4" stroke-width="9" stroke-linecap="round"/>
+                      <ellipse cx="492" cy="314" rx="104" ry="62" fill="#6C4328"/>
+                      <path d="M492 274c22 28 22 42 0 82" stroke="#F8EEE4" stroke-width="10" stroke-linecap="round"/>
+                    </svg>
+                  {% when 'creamy-cappuccino' %}
+                    <svg class="rito-coffee-moments__placeholder-art" viewBox="0 0 700 520" fill="none">
+                      <rect width="700" height="520" fill="#F0DECA"/>
+                      <circle cx="350" cy="258" r="170" fill="#FFF8EF"/>
+                      <circle cx="350" cy="258" r="126" fill="#E6C8A4"/>
+                      <path d="M350 188c-38 20-60 46-60 76 0 44 34 78 60 78s60-34 60-78c0-30-22-56-60-76Z" fill="#FBF4EC"/>
+                      <path d="M350 210c38 16 66 44 66 72 0 34-30 62-66 62s-66-28-66-62c0-28 28-56 66-72Z" stroke="#B88746" stroke-width="8"/>
+                      <path d="M208 414h284" stroke="#B88746" stroke-width="12" stroke-linecap="round"/>
+                    </svg>
+                  {% when 'italian-ritual' %}
+                    <svg class="rito-coffee-moments__placeholder-art" viewBox="0 0 700 520" fill="none">
+                      <rect width="700" height="520" fill="#F2E2CE"/>
+                      <rect x="206" y="90" width="260" height="344" rx="36" fill="#E4CCAF"/>
+                      <path d="M240 148c20-34 56-52 98-52 44 0 78 18 104 56" stroke="#8B5E3C" stroke-width="12" stroke-linecap="round"/>
+                      <path d="M266 198h142" stroke="#B88746" stroke-width="12" stroke-linecap="round"/>
+                      <path d="M286 252c30 18 94 18 124 0" stroke="#8B5E3C" stroke-width="9" stroke-linecap="round"/>
+                      <path d="M338 166c-30 12-48 42-48 86 0 50 22 92 48 92s48-42 48-92c0-44-20-74-48-86Z" fill="#6D4428"/>
+                      <path d="M338 192c16 24 18 84 0 128" stroke="#EADBC7" stroke-width="7" stroke-linecap="round"/>
+                    </svg>
+                  {% when 'slow-brew' %}
+                    <svg class="rito-coffee-moments__placeholder-art" viewBox="0 0 700 520" fill="none">
+                      <rect width="700" height="520" fill="#F0DECA"/>
+                      <path d="M224 110h244l-34 68H258l-34-68Z" fill="#E7D2BB" stroke="#8B5E3C" stroke-width="10" stroke-linejoin="round"/>
+                      <path d="M258 178h176l-60 160h-56l-60-160Z" fill="#FBF5EE" stroke="#8B5E3C" stroke-width="10" stroke-linejoin="round"/>
+                      <rect x="286" y="344" width="120" height="28" rx="14" fill="#6D4428"/>
+                      <path d="M198 406h294" stroke="#C59A63" stroke-width="10" stroke-linecap="round"/>
+                    </svg>
+                  {% else %}
+                    <svg class="rito-coffee-moments__placeholder-art" viewBox="0 0 900 520" fill="none">
+                      <rect width="900" height="520" fill="#F1E0CB"/>
+                      <rect x="146" y="192" width="122" height="156" rx="24" fill="#E7D2BB"/>
+                      <rect x="248" y="154" width="134" height="194" rx="28" fill="#D9B88F"/>
+                      <rect x="372" y="184" width="122" height="164" rx="24" fill="#E7D2BB"/>
+                      <rect x="484" y="144" width="138" height="204" rx="28" fill="#C79C63"/>
+                      <path d="M174 228h64M278 196h72M402 222h64M516 188h76" stroke="#7B4D2A" stroke-width="8" stroke-linecap="round"/>
+                      <circle cx="206" cy="282" r="18" fill="#6D4428"/>
+                      <circle cx="314" cy="248" r="20" fill="#6D4428"/>
+                      <circle cx="432" cy="280" r="18" fill="#6D4428"/>
+                      <circle cx="560" cy="246" r="20" fill="#6D4428"/>
+                    </svg>
+                {% endcase %}
+              </div>
+            {% endif %}
+            <div class="rito-coffee-moments__overlay"></div>
+            <div class="rito-coffee-moments__label">{{ block.settings.label }}</div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <div class="rito-coffee-moments__footer">
+      <a class="rito-coffee-moments__button" href="{{ section.settings.button_link | default: '#' }}">
+        {{ section.settings.button_label }}
+      </a>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .rito-coffee-moments {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    background: #ffffff;
+    padding: 100px 40px;
+  }
+
+  .rito-coffee-moments__inner {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .rito-coffee-moments__header {
+    max-width: 720px;
+    margin: 0 auto 52px;
+    text-align: center;
+  }
+
+  .rito-coffee-moments__eyebrow {
+    margin: 0 0 12px;
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .rito-coffee-moments__heading {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .rito-coffee-moments__subheading {
+    margin: 18px auto 0;
+    color: #7a6a5c;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .rito-coffee-moments__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: minmax(260px, auto);
+    gap: 20px;
+  }
+
+  .rito-coffee-moments__card {
+    min-height: 260px;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 22px 60px rgba(42, 27, 18, 0.08);
+  }
+
+  .rito-coffee-moments__card--large {
+    grid-column: span 2;
+    grid-row: span 2;
+    min-height: 540px;
+  }
+
+  .rito-coffee-moments__media {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f4eadf 0%, #e8d5bf 100%);
+  }
+
+  .rito-coffee-moments__image,
+  .rito-coffee-moments__placeholder {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .rito-coffee-moments__image {
+    object-fit: cover;
+    transition: transform 0.45s ease;
+  }
+
+  .rito-coffee-moments__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rito-coffee-moments__placeholder-art {
+    width: 100%;
+    height: 100%;
+    color: rgba(122, 77, 42, 0.94);
+    transition: transform 0.45s ease;
+  }
+
+  .rito-coffee-moments__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(25, 16, 12, 0.04) 0%, rgba(25, 16, 12, 0.14) 56%, rgba(25, 16, 12, 0.62) 100%);
+    transition: background 0.45s ease;
+  }
+
+  .rito-coffee-moments__label {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 22px 24px;
+    color: #fff8ef;
+    font-family: var(--font-heading--family);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .rito-coffee-moments__card:not(.rito-coffee-moments__card--large) .rito-coffee-moments__label {
+    font-size: 20px;
+  }
+
+  .rito-coffee-moments__card:hover .rito-coffee-moments__image,
+  .rito-coffee-moments__card:hover .rito-coffee-moments__placeholder-art {
+    transform: scale(1.06);
+  }
+
+  .rito-coffee-moments__card:hover .rito-coffee-moments__overlay {
+    background: linear-gradient(180deg, rgba(25, 16, 12, 0.08) 0%, rgba(25, 16, 12, 0.2) 56%, rgba(25, 16, 12, 0.72) 100%);
+  }
+
+  .rito-coffee-moments__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 36px;
+  }
+
+  .rito-coffee-moments__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 28px;
+    border-radius: 999px;
+    background: #2a1b12;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 0.28s ease, transform 0.28s ease;
+  }
+
+  .rito-coffee-moments__button:hover,
+  .rito-coffee-moments__button:focus-visible {
+    background: #b88746;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  @media screen and (max-width: 1099px) {
+    .rito-coffee-moments__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rito-coffee-moments__card--large {
+      grid-column: span 2;
+      grid-row: span 1;
+      min-height: 420px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .rito-coffee-moments {
+      padding: 64px 18px;
+    }
+
+    .rito-coffee-moments__heading {
+      font-size: 36px;
+    }
+
+    .rito-coffee-moments__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rito-coffee-moments__card,
+    .rito-coffee-moments__card--large {
+      grid-column: auto;
+      min-height: 260px;
+    }
+
+    .rito-coffee-moments__card--large {
+      min-height: 320px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Rito Coffee Moments",
+  "tag": "section",
+  "class": "section-wrapper",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "COFFEE MOMENTS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Coffee Moments"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtitle",
+      "default": "A visual taste of slow mornings, rich aroma, and Italian-inspired coffee rituals."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Follow Our Coffee Journey"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "moment",
+      "name": "Gallery card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Morning Espresso"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rito Coffee Moments",
+      "blocks": [
+        { "type": "moment", "settings": { "label": "Morning Espresso" } },
+        { "type": "moment", "settings": { "label": "Freshly Roasted" } },
+        { "type": "moment", "settings": { "label": "Creamy Cappuccino" } },
+        { "type": "moment", "settings": { "label": "Italian Ritual" } },
+        { "type": "moment", "settings": { "label": "Slow Brew" } },
+        { "type": "moment", "settings": { "label": "Gift Moments" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
