@@ -1004,6 +1004,7 @@
   .cart-drawer .cart-items__remove {
     --button-color: #7a6a5c;
     --button-background-color: #ffffff;
+    --button-border-color: #e8ded2;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1020,8 +1021,13 @@
   .cart-drawer .cart-items__remove:focus-visible {
     --button-color: #ffffff;
     --button-background-color: #2a1b12;
+    --button-border-color: #2a1b12;
     background: #2a1b12;
     color: #ffffff;
+  }
+
+  .cart-drawer .cart-items__remove .svg-wrapper {
+    color: inherit;
   }
 
   .cart-drawer .cart-items__error--drawer {
@@ -1065,6 +1071,7 @@
   .cart-drawer-empty-state__button {
     --button-color: #ffffff;
     --button-background-color: #2a1b12;
+    --button-border-color: #2a1b12;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1079,12 +1086,14 @@
     font-weight: 800;
     text-decoration: none;
     color: #ffffff !important;
+    opacity: 1;
   }
 
   .cart-drawer-empty-state__button:hover,
   .cart-drawer-empty-state__button:focus-visible {
     --button-color: #ffffff;
     --button-background-color: #b88746;
+    --button-border-color: #b88746;
     background: #b88746;
     color: #ffffff !important;
   }

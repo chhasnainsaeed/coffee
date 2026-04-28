@@ -597,17 +597,20 @@
   .cart-totals--drawer .cart-discount__button {
     --button-color: #ffffff;
     --button-background-color: #2a1b12;
+    --button-border-color: #2a1b12;
     min-width: 88px;
     height: 46px;
     border-radius: 999px;
     background: #2a1b12;
     color: #ffffff;
+    opacity: 1;
   }
 
   .cart-totals--drawer .cart-discount__button:hover,
   .cart-totals--drawer .cart-discount__button:focus-visible {
     --button-color: #ffffff;
     --button-background-color: #b88746;
+    --button-border-color: #b88746;
     background: #b88746;
     color: #ffffff;
   }
@@ -615,6 +618,7 @@
   .cart-totals--drawer .cart__checkout-button {
     --button-color: #ffffff;
     --button-background-color: #2a1b12;
+    --button-border-color: #2a1b12;
     height: 56px;
     border-radius: 999px;
     background: #2a1b12;
@@ -632,7 +636,22 @@
   .cart-totals--drawer .cart__checkout-button:focus-visible {
     --button-color: #ffffff;
     --button-background-color: #b88746;
+    --button-border-color: #b88746;
     background: #b88746;
+  }
+
+  .cart-totals--drawer .cart__checkout-button:disabled,
+  .cart-totals--drawer .cart__checkout-button[aria-disabled='true'],
+  .cart-totals--drawer .cart-discount__button:disabled,
+  .cart-totals--drawer .cart-discount__button[aria-disabled='true'] {
+    opacity: 1;
+    color: #ffffff;
+  }
+
+  .cart-totals--drawer .cart__checkout-button .button-text,
+  .cart-totals--drawer .cart-discount__button .button-text {
+    color: inherit !important;
+    opacity: 1;
   }
 
   .cart-totals--drawer .cart-totals__item {

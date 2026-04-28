@@ -370,6 +370,7 @@
   .cart-drawer__close-button {
     --button-color: #20140e;
     --button-background-color: #f8f3ec;
+    --button-border-color: #e8ded2;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -387,8 +388,13 @@
   .cart-drawer__close-button:focus-visible {
     --button-color: #ffffff;
     --button-background-color: #2a1b12;
+    --button-border-color: #2a1b12;
     background: #2a1b12;
     color: #ffffff;
+  }
+
+  .cart-drawer__close-button .svg-wrapper {
+    color: inherit;
   }
 
   .cart-drawer--empty .cart-drawer__content {
