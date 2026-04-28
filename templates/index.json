@@ -495,6 +495,71 @@
         "heading": "Coffee Questions, Answered",
         "subheading": "Everything you need to know before choosing your perfect Rito Del Caffe blend."
       }
+    },
+    "rito_coffee_moments_u3Hx9N": {
+      "type": "rito-coffee-moments",
+      "blocks": {
+        "moment_1": { "type": "moment", "settings": { "label": "Morning Espresso" } },
+        "moment_2": { "type": "moment", "settings": { "label": "Freshly Roasted" } },
+        "moment_3": { "type": "moment", "settings": { "label": "Creamy Cappuccino" } },
+        "moment_4": { "type": "moment", "settings": { "label": "Italian Ritual" } },
+        "moment_5": { "type": "moment", "settings": { "label": "Slow Brew" } },
+        "moment_6": { "type": "moment", "settings": { "label": "Gift Moments" } }
+      },
+      "block_order": [
+        "moment_1",
+        "moment_2",
+        "moment_3",
+        "moment_4",
+        "moment_5",
+        "moment_6"
+      ],
+      "name": "Rito Coffee Moments",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "COFFEE MOMENTS",
+        "heading": "Coffee Moments",
+        "subheading": "A visual taste of slow mornings, rich aroma, and Italian-inspired coffee rituals.",
+        "button_label": "Follow Our Coffee Journey"
+      }
+    },
+    "rito_final_cta_w6Ny2T": {
+      "type": "rito-final-cta",
+      "blocks": {
+        "trust_1": {
+          "type": "trust",
+          "settings": {
+            "text": "Premium Italian-inspired blends"
+          }
+        },
+        "trust_2": {
+          "type": "trust",
+          "settings": {
+            "text": "Fresh aroma"
+          }
+        },
+        "trust_3": {
+          "type": "trust",
+          "settings": {
+            "text": "Smooth everyday coffee"
+          }
+        }
+      },
+      "block_order": [
+        "trust_1",
+        "trust_2",
+        "trust_3"
+      ],
+      "name": "Rito Final CTA",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "SHOP RITO DEL CAFFE",
+        "heading": "Ready for Your Perfect Cup?",
+        "subheading": "Bring home the rich aroma, smooth taste, and Italian-inspired ritual of Rito Del Caffe 1937.",
+        "primary_button_label": "Shop All Coffee",
+        "primary_button_link": "shopify://collections/all",
+        "secondary_button_label": "Explore Sampler Pack"
+      }
     }
   },
   "order": [
@@ -504,6 +569,8 @@
     "rito_brand_story_m4Kd2P",
     "rito_brewing_rituals_k8Lm2Q",
     "rito_coffee_club_q7Nd4S",
-    "rito_faq_r4Mx8V"
+    "rito_faq_r4Mx8V",
+    "rito_coffee_moments_u3Hx9N",
+    "rito_final_cta_w6Ny2T"
   ]
 }
