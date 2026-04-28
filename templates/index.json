@@ -394,6 +394,45 @@
         "heading": "Brew It Your Way",
         "subheading": "From bold espresso to smooth filter coffee, discover the perfect brewing ritual for every Rito Del Caffe blend."
       }
+    },
+    "rito_coffee_club_q7Nd4S": {
+      "type": "rito-coffee-club",
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "text": "10% off your first order"
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "text": "Early access to new blends"
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "text": "Premium brewing tips and coffee rituals"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3"
+      ],
+      "name": "Rito Coffee Club",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "EXCLUSIVE OFFERS",
+        "heading": "Join the Rito Coffee Club",
+        "subheading": "Get exclusive coffee offers, brewing tips, and early access to new Italian-inspired blends.",
+        "form_heading": "Claim your first-order offer",
+        "email_placeholder": "Enter your email",
+        "button_label": "Get 10% Off",
+        "privacy_text": "No spam. Just coffee, offers, and brewing inspiration."
+      }
     }
   },
   "order": [
@@ -401,6 +440,7 @@
     "product_list_fa6P9H",
     "coffee_types_9Hk2Lm",
     "rito_brand_story_m4Kd2P",
-    "rito_brewing_rituals_k8Lm2Q"
+    "rito_brewing_rituals_k8Lm2Q",
+    "rito_coffee_club_q7Nd4S"
   ]
 }

@@ -1,0 +1,403 @@
+<section class="rito-coffee-club color-{{ section.settings.color_scheme }}">
+  <div class="rito-coffee-club__inner">
+    <div class="rito-coffee-club__panel">
+      <div class="rito-coffee-club__copy">
+        {% if section.settings.eyebrow != blank %}
+          <p class="rito-coffee-club__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="rito-coffee-club__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.subheading != blank %}
+          <p class="rito-coffee-club__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+
+        <div class="rito-coffee-club__benefits" aria-label="Membership benefits">
+          {% for block in section.blocks %}
+            <div class="rito-coffee-club__benefit" {{ block.shopify_attributes }}>
+              <span class="rito-coffee-club__benefit-mark" aria-hidden="true"></span>
+              <span class="rito-coffee-club__benefit-text">{{ block.settings.text }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="rito-coffee-club__form-wrap">
+        <div class="rito-coffee-club__form-card">
+          <h3 class="rito-coffee-club__form-title">{{ section.settings.form_heading }}</h3>
+
+          {% form 'customer', class: 'rito-coffee-club__form' %}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+
+            {% if form.posted_successfully? %}
+              <p class="rito-coffee-club__form-message rito-coffee-club__form-message--success">Thanks. Your coffee club offer is on the way.</p>
+            {% endif %}
+
+            {% if form.errors %}
+              <p class="rito-coffee-club__form-message rito-coffee-club__form-message--error">{{ form.errors | default_errors }}</p>
+            {% endif %}
+
+            <div class="rito-coffee-club__field">
+              <input
+                id="RitoCoffeeClubEmail-{{ section.id }}"
+                class="rito-coffee-club__input"
+                type="email"
+                name="contact[email]"
+                value="{{ form.email }}"
+                placeholder="{{ section.settings.email_placeholder }}"
+                autocorrect="off"
+                autocapitalize="off"
+                autocomplete="email"
+                required
+              >
+            </div>
+
+            <button class="rito-coffee-club__button" type="submit" name="commit">
+              {{ section.settings.button_label }}
+            </button>
+          {% endform %}
+
+          {% if section.settings.privacy_text != blank %}
+            <p class="rito-coffee-club__privacy">{{ section.settings.privacy_text }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .rito-coffee-club {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    background: #ffffff;
+    padding: 100px 40px;
+  }
+
+  .rito-coffee-club__inner {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .rito-coffee-club__panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 48px;
+    overflow: hidden;
+    padding: 64px;
+    border-radius: 36px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2a1b12 0%, #4a2f1f 100%);
+    box-shadow: 0 30px 90px rgba(42, 27, 18, 0.18);
+  }
+
+  .rito-coffee-club__panel::before,
+  .rito-coffee-club__panel::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .rito-coffee-club__panel::before {
+    top: -80px;
+    right: -40px;
+    width: 260px;
+    height: 260px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(184, 135, 70, 0.32) 0%, rgba(184, 135, 70, 0) 72%);
+  }
+
+  .rito-coffee-club__panel::after {
+    bottom: -120px;
+    left: -60px;
+    width: 360px;
+    height: 360px;
+    border-radius: 999px;
+    opacity: 0.1;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0 8%, transparent 9% 100%),
+      radial-gradient(circle at 70% 62%, rgba(255, 255, 255, 0.4) 0 8%, transparent 9% 100%),
+      radial-gradient(circle at 54% 84%, rgba(255, 255, 255, 0.4) 0 8%, transparent 9% 100%);
+  }
+
+  .rito-coffee-club__copy,
+  .rito-coffee-club__form-wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  .rito-coffee-club__copy {
+    align-self: center;
+  }
+
+  .rito-coffee-club__eyebrow {
+    margin: 0 0 12px;
+    color: #d9b67d;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .rito-coffee-club__heading {
+    margin: 0;
+    color: #ffffff;
+    font-family: var(--font-heading--family);
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+
+  .rito-coffee-club__subheading {
+    margin: 18px 0 0;
+    max-width: 34ch;
+    color: rgba(255, 247, 237, 0.82);
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .rito-coffee-club__benefits {
+    display: grid;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .rito-coffee-club__benefit {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+  }
+
+  .rito-coffee-club__benefit-mark {
+    width: 16px;
+    height: 16px;
+    margin-top: 4px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #e1c07f 0%, #b88746 100%);
+    box-shadow: 0 0 0 6px rgba(184, 135, 70, 0.12);
+  }
+
+  .rito-coffee-club__benefit-text {
+    color: #fff7ed;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .rito-coffee-club__form-card {
+    padding: 34px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.18);
+  }
+
+  .rito-coffee-club__form-title {
+    margin: 0 0 18px;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .rito-coffee-club__form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .rito-coffee-club__field {
+    width: 100%;
+  }
+
+  .rito-coffee-club__input {
+    width: 100%;
+    height: 54px;
+    padding: 0 18px;
+    border: 1px solid #e8ded2;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #2a1b12;
+    font-size: 15px;
+  }
+
+  .rito-coffee-club__input:focus {
+    outline: 2px solid rgba(184, 135, 70, 0.32);
+    outline-offset: 2px;
+  }
+
+  .rito-coffee-club__button {
+    width: 100%;
+    height: 54px;
+    border: 0;
+    border-radius: 999px;
+    background: #b88746;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+      background-color 0.28s ease,
+      transform 0.28s ease;
+  }
+
+  .rito-coffee-club__button:hover,
+  .rito-coffee-club__button:focus-visible {
+    background: #9a6a43;
+    transform: translateY(-1px);
+  }
+
+  .rito-coffee-club__privacy {
+    margin: 16px 0 0;
+    color: #7a6a5c;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .rito-coffee-club__form-message {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .rito-coffee-club__form-message--success {
+    color: #2f6b3b;
+  }
+
+  .rito-coffee-club__form-message--error {
+    color: #a33f2f;
+  }
+
+  .rito-coffee-club__form-message--error ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  @media screen and (max-width: 1099px) {
+    .rito-coffee-club__panel {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .rito-coffee-club {
+      padding: 70px 18px;
+    }
+
+    .rito-coffee-club__panel {
+      gap: 28px;
+      padding: 40px 24px;
+    }
+
+    .rito-coffee-club__heading {
+      font-size: 38px;
+    }
+
+    .rito-coffee-club__form-card {
+      padding: 26px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Rito Coffee Club",
+  "tag": "section",
+  "class": "section-wrapper",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "EXCLUSIVE OFFERS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join the Rito Coffee Club"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtitle",
+      "default": "Get exclusive coffee offers, brewing tips, and early access to new Italian-inspired blends."
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form heading",
+      "default": "Claim your first-order offer"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Get 10% Off"
+    },
+    {
+      "type": "text",
+      "id": "privacy_text",
+      "label": "Privacy text",
+      "default": "No spam. Just coffee, offers, and brewing inspiration."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "10% off your first order"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rito Coffee Club",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "text": "10% off your first order"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "text": "Early access to new blends"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "text": "Premium brewing tips and coffee rituals"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
