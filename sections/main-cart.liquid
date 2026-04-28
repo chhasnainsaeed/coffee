@@ -1,237 +1,864 @@
-{% capture cart_page_more_blocks_content %}
-  <div class="cart-page__more-blocks">
-    {%- content_for 'blocks' -%}
+{% liquid
+  assign upsell_handles = 'il-decaf,il-filtro,italian-coffee-sampler' | split: ','
+%}
+
+<section class="rito-cart-hero color-{{ section.settings.color_scheme }}" {{ section.shopify_attributes }}>
+  <div class="rito-cart-hero__inner">
+    <p class="rito-cart-hero__eyebrow">YOUR CART</p>
+    <h1 class="rito-cart-hero__title">Your Coffee Cart</h1>
+    <p class="rito-cart-hero__subtitle">Review your selected Italian-inspired coffee blends before checkout.</p>
   </div>
-{% endcapture %}
+</section>
 
-<cart-items-component
-  class="cart-items-component"
-  data-section-id="{{ section.id }}"
->
-  <template id="empty-cart-template">
-    <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-    <div
-      class="section color-{{ section.settings.color_scheme }} section--{{ section.settings.section_width }}"
-    >
-      <div
-        class="cart-page spacing-style{% if cart.empty? %} cart-page--empty{% endif %}"
-        style="{% render 'spacing-style', settings: section.settings %}"
-      >
-        <div class="cart-page__title">
-          {%- content_for 'block', id: 'cart-page-title', type: '_cart-title', force_empty: true %}
+<section class="rito-cart-main color-{{ section.settings.color_scheme }}">
+  <div class="rito-cart-main__inner">
+    {% if cart.item_count > 0 %}
+      <div class="rito-cart-layout">
+        <div class="rito-cart-panel">
+          <div class="rito-cart-panel__header">
+            <h2 class="rito-cart-panel__title">Cart Items</h2>
+            <span class="rito-cart-panel__count">{{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}</span>
+          </div>
+
+          <div class="rito-cart-items">
+            {% for item in cart.items %}
+              {% liquid
+                assign subtitle = item.product.metafields.custom.subtitle.value | default: item.product.metafields.custom.subtitle
+                assign roast_level = item.product.metafields.custom.roast_level.value | default: item.product.metafields.custom.roast_level
+                assign net_weight = item.product.metafields.custom.net_weight.value | default: item.product.metafields.custom.net_weight
+                assign category = item.product.metafields.custom.category.value | default: item.product.metafields.custom.category
+
+                case item.product.handle
+                  when 'il-cappuccino'
+                    assign subtitle_fallback = 'Rich & Creamy Italian Blend'
+                    assign roast_fallback = 'Medium Roast'
+                    assign weight_fallback = '250g / 8.8oz'
+                    assign category_fallback = 'Whole Bean'
+                  when 'l-espresso', 'lespresso', 'the-espresso', 'espresso'
+                    assign subtitle_fallback = 'Bold & Intense Italian Blend'
+                    assign roast_fallback = 'Dark Roast'
+                    assign weight_fallback = '250g / 8.8oz'
+                    assign category_fallback = 'Espresso'
+                  when 'il-decaf'
+                    assign subtitle_fallback = 'Smooth Italian Decaffeinated Blend'
+                    assign roast_fallback = 'Medium Roast'
+                    assign weight_fallback = '250g / 8.8oz'
+                    assign category_fallback = 'Decaf'
+                  when 'il-filtro', 'the-filter'
+                    assign subtitle_fallback = 'Smooth Filter Coffee Blend'
+                    assign roast_fallback = 'Medium Roast'
+                    assign weight_fallback = '250g / 8.8oz'
+                    assign category_fallback = 'Filter Coffee'
+                  when 'italian-coffee-sampler', 'sampler-product'
+                    assign subtitle_fallback = 'A Curated Selection of Premium Italian Blends'
+                    assign roast_fallback = 'Mixed Roast Selection'
+                    assign weight_fallback = 'Sampler Pack'
+                    assign category_fallback = 'Sampler'
+                  else
+                    assign subtitle_fallback = 'Crafted for rich aroma, smooth taste, and an authentic Italian-inspired coffee ritual.'
+                    assign roast_fallback = 'Medium Roast'
+                    assign weight_fallback = '250g / 8.8oz'
+                    assign category_fallback = 'Whole Bean'
+                endcase
+
+                if subtitle == blank
+                  assign subtitle = subtitle_fallback
+                endif
+                if roast_level == blank
+                  assign roast_level = roast_fallback
+                endif
+                if net_weight == blank
+                  assign net_weight = weight_fallback
+                endif
+                if category == blank
+                  assign category = category_fallback
+                endif
+              %}
+
+              <article class="rito-cart-item" data-cart-item data-line="{{ forloop.index }}" data-quantity="{{ item.quantity }}">
+                <a href="{{ item.url }}" class="rito-cart-item__media-link" aria-label="View {{ item.product.title }}">
+                  <div class="rito-cart-item__media">
+                    {% if item.image %}
+                      {{
+                        item.image
+                        | image_url: width: 600
+                        | image_tag:
+                          class: 'rito-cart-item__image',
+                          widths: '180, 240, 360, 480, 600',
+                          sizes: '120px',
+                          alt: item.image.alt | default: item.product.title,
+                          loading: 'lazy'
+                      }}
+                    {% endif %}
+                  </div>
+                </a>
+
+                <div class="rito-cart-item__content">
+                  <p class="rito-cart-item__category">{{ category }}</p>
+                  <h3 class="rito-cart-item__title"><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+                  <p class="rito-cart-item__subtitle">{{ subtitle }}</p>
+                  <div class="rito-cart-item__meta">
+                    <span>{{ roast_level }}</span>
+                    <span>{{ net_weight }}</span>
+                  </div>
+                  <a class="rito-cart-item__remove" href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0">Remove</a>
+                </div>
+
+                <div class="rito-cart-item__aside">
+                  <div class="rito-cart-item__quantity" aria-label="Quantity controls">
+                    <button type="button" class="rito-cart-item__qty-button" data-qty-adjust="-1" aria-label="Decrease quantity">-</button>
+                    <span class="rito-cart-item__qty-value">{{ item.quantity }}</span>
+                    <button type="button" class="rito-cart-item__qty-button" data-qty-adjust="1" aria-label="Increase quantity">+</button>
+                  </div>
+                  <p class="rito-cart-item__price">{{ item.final_line_price | money }}</p>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
         </div>
-        <div class="cart-page__items">
-          {%- content_for 'block', id: 'cart-page-items', type: '_cart-products', force_empty: true %}
+
+        <aside class="rito-cart-summary">
+          <h2 class="rito-cart-summary__title">Order Summary</h2>
+
+          <div class="rito-cart-summary__rows">
+            <div class="rito-cart-summary__row">
+              <span>Subtotal</span>
+              <span data-cart-subtotal>{{ cart.items_subtotal_price | money }}</span>
+            </div>
+            <div class="rito-cart-summary__row">
+              <span>Shipping</span>
+              <span>Calculated at checkout</span>
+            </div>
+            <div class="rito-cart-summary__row">
+              <span>Discount</span>
+              <span>—</span>
+            </div>
+            <div class="rito-cart-summary__row rito-cart-summary__row--total">
+              <span>Estimated total</span>
+              <span data-cart-total>{{ cart.total_price | money }}</span>
+            </div>
+          </div>
+
+          <div class="rito-cart-summary__promo">
+            <label class="rito-cart-summary__promo-label" for="RitoPromoCode-{{ section.id }}">Promo Code</label>
+            <div class="rito-cart-summary__promo-row">
+              <input
+                id="RitoPromoCode-{{ section.id }}"
+                class="rito-cart-summary__promo-input"
+                type="text"
+                placeholder="Enter code"
+              >
+              <button type="button" class="rito-cart-summary__promo-button">Apply</button>
+            </div>
+          </div>
+
+          <a href="/checkout" class="rito-cart-summary__button rito-cart-summary__button--primary">Proceed to Checkout</a>
+          <a href="/collections/all" class="rito-cart-summary__button rito-cart-summary__button--secondary">Continue Shopping</a>
+
+          <div class="rito-cart-summary__trust" aria-label="Checkout trust notes">
+            <div class="rito-cart-summary__trust-item"><span class="rito-cart-summary__trust-mark" aria-hidden="true"></span><span>Secure checkout</span></div>
+            <div class="rito-cart-summary__trust-item"><span class="rito-cart-summary__trust-mark" aria-hidden="true"></span><span>Fresh aroma</span></div>
+            <div class="rito-cart-summary__trust-item"><span class="rito-cart-summary__trust-mark" aria-hidden="true"></span><span>Premium Italian-inspired coffee</span></div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="rito-cart-upsell">
+        <div class="rito-cart-upsell__header">
+          <h2 class="rito-cart-upsell__title">Add One More Ritual</h2>
         </div>
-        {{ cart_page_more_blocks_content }}
-      </div>
-    </div>
-  </template>
+        <div class="rito-cart-upsell__grid">
+          {% for upsell_handle in upsell_handles %}
+            {% assign upsell_product = all_products[upsell_handle] %}
+            {% if upsell_product != blank %}
+              {% liquid
+                assign upsell_subtitle = upsell_product.metafields.custom.subtitle.value | default: upsell_product.metafields.custom.subtitle
+                assign upsell_category = upsell_product.metafields.custom.category.value | default: upsell_product.metafields.custom.category
 
-  {% # theme-check-disable UniqueStaticBlockId %}
-  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-  <div
-    class="section color-{{ section.settings.color_scheme }} section--{{ section.settings.section_width }}"
-  >
-    <div
-      class="cart-page spacing-style{% if cart.empty? %} cart-page--empty{% endif %}"
-      style="{% render 'spacing-style', settings: section.settings %}"
-    >
-      <div class="cart-page__title">
-        {%- content_for 'block', id: 'cart-page-title', type: '_cart-title' %}
-      </div>
+                case upsell_product.handle
+                  when 'il-decaf'
+                    assign upsell_subtitle_fallback = 'Smooth Italian Decaffeinated Blend'
+                    assign upsell_category_fallback = 'Decaf'
+                  when 'il-filtro', 'the-filter'
+                    assign upsell_subtitle_fallback = 'Smooth Filter Coffee Blend'
+                    assign upsell_category_fallback = 'Filter Coffee'
+                  when 'italian-coffee-sampler', 'sampler-product'
+                    assign upsell_subtitle_fallback = 'A Curated Selection of Premium Italian Blends'
+                    assign upsell_category_fallback = 'Sampler'
+                  else
+                    assign upsell_subtitle_fallback = 'Crafted for rich aroma and smooth taste.'
+                    assign upsell_category_fallback = 'Italian Roast'
+                endcase
 
-      <div class="cart-page__items">
-        {%- content_for 'block', id: 'cart-page-items', type: '_cart-products' %}
-      </div>
-
-      {%- unless cart.empty? -%}
-        <div class="cart-page__summary">
-          {%- content_for 'block', id: 'cart-page-summary', type: '_cart-summary' -%}
+                if upsell_subtitle == blank
+                  assign upsell_subtitle = upsell_subtitle_fallback
+                endif
+                if upsell_category == blank
+                  assign upsell_category = upsell_category_fallback
+                endif
+              %}
+              <article class="rito-cart-upsell-card">
+                <a href="{{ upsell_product.url }}" class="rito-cart-upsell-card__media-link" aria-label="View {{ upsell_product.title }}">
+                  <div class="rito-cart-upsell-card__media">
+                    <span class="rito-cart-upsell-card__badge">{{ upsell_category }}</span>
+                    {% if upsell_product.featured_media.preview_image %}
+                      {{
+                        upsell_product.featured_media.preview_image
+                        | image_url: width: 900
+                        | image_tag:
+                          class: 'rito-cart-upsell-card__image',
+                          widths: '320, 480, 640, 900',
+                          sizes: '(min-width: 1024px) 31vw, (min-width: 640px) 50vw, 100vw',
+                          alt: upsell_product.featured_media.alt | default: upsell_product.title,
+                          loading: 'lazy'
+                      }}
+                    {% endif %}
+                  </div>
+                </a>
+                <div class="rito-cart-upsell-card__content">
+                  <p class="rito-cart-upsell-card__category">{{ upsell_category }}</p>
+                  <h3 class="rito-cart-upsell-card__title"><a href="{{ upsell_product.url }}">{{ upsell_product.title }}</a></h3>
+                  <p class="rito-cart-upsell-card__subtitle">{{ upsell_subtitle }}</p>
+                  <p class="rito-cart-upsell-card__price">{{ upsell_product.price | money }}</p>
+                  <div class="rito-cart-upsell-card__actions">
+                    <a href="{{ upsell_product.url }}" class="rito-cart-upsell-card__button rito-cart-upsell-card__button--primary">View Product</a>
+                    {% form 'product', upsell_product, class: 'rito-cart-upsell-card__form' %}
+                      <input type="hidden" name="id" value="{{ upsell_product.selected_or_first_available_variant.id }}">
+                      <button type="submit" class="rito-cart-upsell-card__button rito-cart-upsell-card__button--secondary">Add to Cart</button>
+                    {% endform %}
+                  </div>
+                </div>
+              </article>
+            {% endif %}
+          {% endfor %}
         </div>
-      {%- endunless -%}
-
-      {{ cart_page_more_blocks_content }}
-    </div>
+      </section>
+    {% else %}
+      <div class="rito-cart-empty">
+        <div class="rito-cart-empty__card">
+          <div class="rito-cart-empty__visual" aria-hidden="true">
+            <svg viewBox="0 0 220 220" role="presentation">
+              <defs>
+                <linearGradient id="rito-cart-empty-bg" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f6ede2"/>
+                  <stop offset="100%" stop-color="#ead8c0"/>
+                </linearGradient>
+              </defs>
+              <rect x="24" y="24" width="172" height="172" rx="32" fill="url(#rito-cart-empty-bg)"/>
+              <ellipse cx="110" cy="165" rx="52" ry="14" fill="#d8bea0"/>
+              <path d="M79 70c0-12 9-21 21-21h20c12 0 21 9 21 21v88c0 13-11 24-24 24h-14c-13 0-24-11-24-24V70z" fill="#8b5e3c"/>
+              <path d="M90 77h40v74c0 10-8 18-18 18h-4c-10 0-18-8-18-18V77z" fill="#bb8d5c"/>
+              <rect x="96" y="100" width="28" height="42" rx="6" fill="#f7f0e5"/>
+              <circle cx="110" cy="87" r="6" fill="#c69b57"/>
+            </svg>
+          </div>
+          <h2 class="rito-cart-empty__title">Your cart is waiting for coffee</h2>
+          <p class="rito-cart-empty__text">Explore our premium Italian-inspired blends and add your favourite coffee to begin your ritual.</p>
+          <a href="/collections/all" class="rito-cart-empty__button">Shop Coffee</a>
+        </div>
+      </div>
+    {% endif %}
   </div>
-  {% # theme-check-enable UniqueStaticBlockId %}
-</cart-items-component>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.rito-cart-main').forEach(function (section) {
+      section.querySelectorAll('[data-cart-item]').forEach(function (item) {
+        item.querySelectorAll('[data-qty-adjust]').forEach(function (button) {
+          button.addEventListener('click', function () {
+            var line = parseInt(item.getAttribute('data-line'), 10);
+            var currentQty = parseInt(item.getAttribute('data-quantity'), 10);
+            var delta = parseInt(button.getAttribute('data-qty-adjust'), 10);
+            var nextQty = Math.max(0, currentQty + delta);
+            window.location.href = '/cart/change?line=' + line + '&quantity=' + nextQty;
+          });
+        });
+      });
+    });
+  });
+</script>
 
 {% stylesheet %}
-  .cart-page {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0 var(--padding-5xl);
-  }
-
-  .cart-page--empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .cart-page--empty .cart-page__title,
-  .cart-page--empty .cart-page__more-blocks {
-    margin-top: var(--margin-6xl);
-  }
-
-  .cart-page__more-blocks {
-    width: 100%;
-  }
-
-  .cart-page--empty .cart-title {
+  .rito-cart-hero {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 80px 40px 60px;
+    background: linear-gradient(180deg, #fbf7f1 0%, #efe1d1 100%);
     text-align: center;
   }
 
-  .cart-page__main {
-    grid-column: 1;
+  .rito-cart-hero__inner,
+  .rito-cart-main__inner {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
   }
 
-  .cart-page__summary {
-    padding-top: var(--padding-xl);
+  .rito-cart-hero__eyebrow {
+    margin: 0 0 14px;
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
   }
 
-  .cart-page__title + .cart-page__items {
-    margin-block-start: var(--margin-lg);
+  .rito-cart-hero__title {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: clamp(40px, 5vw, 68px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.04em;
   }
 
-  @media screen and (min-width: 750px) {
-    .cart-page {
-      grid-template-columns: 1fr min(50vw, var(--sidebar-width));
-      grid-template-rows: min-content min-content 1fr;
+  .rito-cart-hero__subtitle {
+    max-width: 760px;
+    margin: 18px auto 0;
+    color: #7a6a5c;
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .rito-cart-main {
+    background: #f8f3ec;
+    padding: 64px 40px 100px;
+    color: #20140e;
+  }
+
+  .rito-cart-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 36px;
+    align-items: start;
+  }
+
+  .rito-cart-panel,
+  .rito-cart-summary,
+  .rito-cart-empty__card {
+    border: 1px solid #e8ded2;
+    border-radius: 32px;
+    background: #ffffff;
+    box-shadow: 0 24px 70px rgba(42, 27, 18, 0.08);
+  }
+
+  .rito-cart-panel {
+    padding: 28px;
+  }
+
+  .rito-cart-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 10px;
+  }
+
+  .rito-cart-panel__title,
+  .rito-cart-summary__title,
+  .rito-cart-upsell__title {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .rito-cart-panel__count {
+    color: #7a6a5c;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .rito-cart-item {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr) auto;
+    gap: 20px;
+    align-items: center;
+    padding: 24px 0;
+    border-bottom: 1px solid #e8ded2;
+  }
+
+  .rito-cart-item:last-child {
+    border-bottom: 0;
+  }
+
+  .rito-cart-item__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 22px;
+    background: linear-gradient(180deg, #f7efe5 0%, #efe1d1 100%);
+  }
+
+  .rito-cart-item__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(1.06);
+  }
+
+  .rito-cart-item__category,
+  .rito-cart-upsell-card__category {
+    margin: 0 0 8px;
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .rito-cart-item__title,
+  .rito-cart-upsell-card__title {
+    margin: 0 0 8px;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .rito-cart-item__title a,
+  .rito-cart-upsell-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .rito-cart-item__subtitle,
+  .rito-cart-upsell-card__subtitle {
+    margin: 0;
+    color: #7a6a5c;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .rito-cart-item__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    color: #7a6a5c;
+    font-size: 13px;
+  }
+
+  .rito-cart-item__remove {
+    display: inline-flex;
+    margin-top: 14px;
+    color: #7a6a5c;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+
+  .rito-cart-item__remove:hover,
+  .rito-cart-item__remove:focus-visible {
+    color: #9a6a43;
+  }
+
+  .rito-cart-item__aside {
+    display: grid;
+    justify-items: end;
+    gap: 14px;
+  }
+
+  .rito-cart-item__quantity {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    height: 42px;
+    border: 1px solid #e8ded2;
+    border-radius: 999px;
+    background: #fdfaf6;
+  }
+
+  .rito-cart-item__qty-button,
+  .rito-cart-item__qty-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 42px;
+    color: #20140e;
+    font-size: 16px;
+  }
+
+  .rito-cart-item__qty-button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .rito-cart-item__price,
+  .rito-cart-upsell-card__price {
+    margin: 0;
+    color: #9a6a43;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .rito-cart-summary {
+    position: sticky;
+    top: 24px;
+    padding: 30px;
+  }
+
+  .rito-cart-summary__rows {
+    display: grid;
+    gap: 0;
+    margin-top: 22px;
+  }
+
+  .rito-cart-summary__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #e8ded2;
+    color: #7a6a5c;
+    font-size: 15px;
+  }
+
+  .rito-cart-summary__row--total {
+    color: #20140e;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .rito-cart-summary__row--total span:last-child {
+    color: #9a6a43;
+  }
+
+  .rito-cart-summary__promo {
+    margin-top: 24px;
+  }
+
+  .rito-cart-summary__promo-label {
+    display: block;
+    margin-bottom: 10px;
+    color: #20140e;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .rito-cart-summary__promo-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .rito-cart-summary__promo-input,
+  .rito-cart-summary__promo-button,
+  .rito-cart-summary__button,
+  .rito-cart-empty__button,
+  .rito-cart-upsell-card__button {
+    height: 56px;
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  .rito-cart-summary__promo-input {
+    width: 100%;
+    padding: 0 18px;
+    border: 1px solid #e8ded2;
+    background: #ffffff;
+    color: #20140e;
+    font-size: 15px;
+  }
+
+  .rito-cart-summary__promo-button {
+    padding: 0 20px;
+    border: 0;
+    background: #2a1b12;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .rito-cart-summary__button,
+  .rito-cart-empty__button,
+  .rito-cart-upsell-card__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+  }
+
+  .rito-cart-summary__button--primary,
+  .rito-cart-empty__button,
+  .rito-cart-upsell-card__button--primary {
+    background: #2a1b12;
+    color: #ffffff;
+  }
+
+  .rito-cart-summary__button--primary:hover,
+  .rito-cart-summary__button--primary:focus-visible,
+  .rito-cart-empty__button:hover,
+  .rito-cart-empty__button:focus-visible,
+  .rito-cart-upsell-card__button--primary:hover,
+  .rito-cart-upsell-card__button--primary:focus-visible,
+  .rito-cart-summary__promo-button:hover,
+  .rito-cart-summary__promo-button:focus-visible {
+    background: #b88746;
+  }
+
+  .rito-cart-summary__button--secondary,
+  .rito-cart-upsell-card__button--secondary {
+    margin-top: 12px;
+    border: 1px solid #2a1b12;
+    background: transparent;
+    color: #2a1b12;
+  }
+
+  .rito-cart-summary__button--secondary:hover,
+  .rito-cart-summary__button--secondary:focus-visible,
+  .rito-cart-upsell-card__button--secondary:hover,
+  .rito-cart-upsell-card__button--secondary:focus-visible {
+    background: #2a1b12;
+    color: #ffffff;
+  }
+
+  .rito-cart-summary__button--primary {
+    margin-top: 22px;
+  }
+
+  .rito-cart-summary__trust {
+    display: grid;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .rito-cart-summary__trust-item {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    color: #7a6a5c;
+    font-size: 14px;
+  }
+
+  .rito-cart-summary__trust-mark {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #b88746;
+    flex: 0 0 10px;
+  }
+
+  .rito-cart-empty {
+    display: flex;
+    justify-content: center;
+  }
+
+  .rito-cart-empty__card {
+    max-width: 760px;
+    padding: 44px;
+    text-align: center;
+  }
+
+  .rito-cart-empty__visual {
+    width: 220px;
+    margin: 0 auto 20px;
+  }
+
+  .rito-cart-empty__visual svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .rito-cart-empty__title {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: 38px;
+    line-height: 1.1;
+  }
+
+  .rito-cart-empty__text {
+    max-width: 540px;
+    margin: 16px auto 0;
+    color: #7a6a5c;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .rito-cart-empty__button {
+    max-width: 240px;
+    margin: 24px auto 0;
+  }
+
+  .rito-cart-upsell {
+    margin-top: 56px;
+  }
+
+  .rito-cart-upsell__header {
+    margin-bottom: 24px;
+  }
+
+  .rito-cart-upsell__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .rito-cart-upsell-card {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid #e8ded2;
+    border-radius: 28px;
+    background: #ffffff;
+    box-shadow: 0 20px 55px rgba(42, 27, 18, 0.08);
+  }
+
+  .rito-cart-upsell-card__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    height: 300px;
+    margin-bottom: 22px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, #f7efe5 0%, #efe1d1 100%);
+  }
+
+  .rito-cart-upsell-card__badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    padding: 7px 13px;
+    border: 1px solid rgba(184, 135, 70, 0.28);
+    border-radius: 999px;
+    background: rgba(255, 246, 232, 0.95);
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .rito-cart-upsell-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .rito-cart-upsell-card__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 0 4px;
+  }
+
+  .rito-cart-upsell-card__actions {
+    display: grid;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .rito-cart-upsell-card__form {
+    margin: 0;
+  }
+
+  @media screen and (max-width: 1023px) {
+    .rito-cart-layout {
+      grid-template-columns: 1fr;
     }
 
-    .cart-page__summary {
-      display: grid;
-      height: 100%;
+    .rito-cart-summary {
+      position: static;
+    }
+
+    .rito-cart-item {
+      grid-template-columns: 100px minmax(0, 1fr);
+    }
+
+    .rito-cart-item__aside {
       grid-column: 2;
-      grid-row: 1 / -1;
-      align-self: stretch;
-      grid-template-rows: subgrid;
-      padding-top: 0;
-
-      /* needed to support blurred effect from hero section */
-      position: relative;
+      justify-items: start;
     }
 
-    .section--page-width .cart-page:has(.cart-summary--extend) {
-      grid-column: 2 / 4;
-      grid-template-columns: 1fr minmax(
-          var(--sidebar-width),
-          calc((100vw - var(--page-width)) / 2 + var(--sidebar-width))
-        );
+    .rito-cart-upsell__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media screen and (min-width: 1400px) {
-    .cart-page {
-      grid-template-columns: 1fr var(--sidebar-width);
+  @media screen and (max-width: 639px) {
+    .rito-cart-hero {
+      padding: 64px 18px 44px;
     }
-  }
 
-  html:active-view-transition-type(empty-cart-page) {
-    .cart-items-component {
-      view-transition-name: cart-page-content;
+    .rito-cart-main {
+      padding: 44px 18px 72px;
     }
-  }
 
-  ::view-transition-old(cart-page-content) {
-    animation: cart-page-content-old var(--animation-speed-fast) var(--animation-easing) forwards;
-  }
-
-  @keyframes cart-page-content-old {
-    from {
-      opacity: 1;
+    .rito-cart-hero__title {
+      font-size: 36px;
     }
-    to {
-      opacity: 0;
-      filter: blur(4px);
+
+    .rito-cart-panel {
+      padding: 20px;
+    }
+
+    .rito-cart-summary {
+      padding: 22px;
+    }
+
+    .rito-cart-item {
+      grid-template-columns: 90px minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .rito-cart-item__media {
+      width: 90px;
+      height: 90px;
+    }
+
+    .rito-cart-item__title {
+      font-size: 18px;
+    }
+
+    .rito-cart-item__aside {
+      gap: 12px;
+    }
+
+    .rito-cart-summary__promo-row {
+      grid-template-columns: 1fr;
+    }
+
+    .rito-cart-upsell__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rito-cart-upsell-card__media {
+      height: 280px;
+    }
+
+    .rito-cart-empty__card {
+      padding: 30px 22px;
     }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:names.cart",
-  "disabled_on": {
-    "groups": ["header", "footer"]
+  "name": "Main Cart",
+  "enabled_on": {
+    "templates": ["cart"]
   },
-  "blocks": [
-    {
-      "type": "@theme"
-    },
-    {
-      "type": "@app"
-    },
-    {
-      "type": "text"
-    },
-    {
-      "type": "icon"
-    },
-    {
-      "type": "image"
-    },
-    {
-      "type": "button"
-    },
-    {
-      "type": "video"
-    },
-    {
-      "type": "group"
-    },
-    {
-      "type": "spacer"
-    }
-  ],
   "settings": [
-    {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "page-width",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "page-width"
-    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "t:settings.color_scheme",
+      "label": "Color scheme",
       "default": "scheme-1"
-    },
-    {
-      "type": "header",
-      "content": "t:content.padding"
-    },
-    {
-      "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
     }
   ]
 }
