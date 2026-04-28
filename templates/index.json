@@ -433,6 +433,68 @@
         "button_label": "Get 10% Off",
         "privacy_text": "No spam. Just coffee, offers, and brewing inspiration."
       }
+    },
+    "rito_faq_r4Mx8V": {
+      "type": "rito-faq",
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "Which coffee is best for espresso?",
+            "answer": "L'Espresso and Espresso Quattro are ideal for bold Italian-style espresso with rich aroma and strong body."
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "Which blend is best for cappuccino?",
+            "answer": "Il Cappuccino is crafted for a smooth, creamy cup that pairs beautifully with steamed milk."
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer decaf coffee?",
+            "answer": "Yes, Il Decaf offers a smooth Italian-style coffee experience without caffeine."
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "What is the difference between whole bean and ground coffee?",
+            "answer": "Whole bean coffee keeps freshness longer and is best if you grind before brewing. Ground coffee is convenient and ready to brew."
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Which product should I try first?",
+            "answer": "The Italian Coffee Sampler is a great choice if you want to explore multiple blends before choosing your favourite."
+          }
+        },
+        "question_6": {
+          "type": "question",
+          "settings": {
+            "question": "Is this suitable for filter coffee?",
+            "answer": "Yes, Il Filtro and Single Filter are designed for smooth, balanced filter-style brewing."
+          }
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4",
+        "question_5",
+        "question_6"
+      ],
+      "name": "Rito FAQ",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "FAQ",
+        "heading": "Coffee Questions, Answered",
+        "subheading": "Everything you need to know before choosing your perfect Rito Del Caffe blend."
+      }
     }
   },
   "order": [
@@ -441,6 +503,7 @@
     "coffee_types_9Hk2Lm",
     "rito_brand_story_m4Kd2P",
     "rito_brewing_rituals_k8Lm2Q",
-    "rito_coffee_club_q7Nd4S"
+    "rito_coffee_club_q7Nd4S",
+    "rito_faq_r4Mx8V"
   ]
 }

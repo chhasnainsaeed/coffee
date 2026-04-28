@@ -1,0 +1,287 @@
+<section class="rito-faq color-{{ section.settings.color_scheme }}">
+  <div class="rito-faq__inner">
+    <div class="rito-faq__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="rito-faq__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class="rito-faq__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="rito-faq__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="rito-faq__grid">
+      {% for block in section.blocks %}
+        <details class="rito-faq__item" {% if forloop.first %}open{% endif %} {{ block.shopify_attributes }}>
+          <summary class="rito-faq__question">
+            <span>{{ block.settings.question }}</span>
+            <span class="rito-faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="rito-faq__answer-wrap">
+            <div class="rito-faq__answer">{{ block.settings.answer }}</div>
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .rito-faq {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    background: #f8f3ec;
+    padding: 100px 40px;
+  }
+
+  .rito-faq__inner {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .rito-faq__header {
+    max-width: 760px;
+    margin: 0 auto 42px;
+    text-align: center;
+  }
+
+  .rito-faq__eyebrow {
+    margin: 0 0 12px;
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .rito-faq__heading {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .rito-faq__subheading {
+    margin: 18px auto 0;
+    max-width: 760px;
+    color: #7a6a5c;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .rito-faq__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .rito-faq__item {
+    overflow: hidden;
+    border: 1px solid #e8ded2;
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 18px 50px rgba(42, 27, 18, 0.06);
+  }
+
+  .rito-faq__question {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 26px;
+    list-style: none;
+    cursor: pointer;
+    color: #20140e;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+
+  .rito-faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .rito-faq__icon {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+  }
+
+  .rito-faq__icon::before,
+  .rito-faq__icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 2px;
+    border-radius: 999px;
+    background: #b88746;
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+
+  .rito-faq__icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .rito-faq__item[open] .rito-faq__icon::after {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(90deg) scaleX(0);
+  }
+
+  .rito-faq__answer-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+  }
+
+  .rito-faq__item[open] .rito-faq__answer-wrap {
+    grid-template-rows: 1fr;
+  }
+
+  .rito-faq__answer {
+    overflow: hidden;
+    padding: 0 26px 22px;
+    color: #7a6a5c;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  @media screen and (max-width: 989px) {
+    .rito-faq__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .rito-faq {
+      padding: 64px 18px;
+    }
+
+    .rito-faq__heading {
+      font-size: 36px;
+    }
+
+    .rito-faq__question {
+      padding: 20px;
+      font-size: 17px;
+    }
+
+    .rito-faq__answer {
+      padding: 0 20px 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Rito FAQ",
+  "tag": "section",
+  "class": "section-wrapper",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "FAQ"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Coffee Questions, Answered"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtitle",
+      "default": "Everything you need to know before choosing your perfect Rito Del Caffe blend."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Which coffee is best for espresso?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "L'Espresso and Espresso Quattro are ideal for bold Italian-style espresso with rich aroma and strong body."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rito FAQ",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question": "Which coffee is best for espresso?",
+            "answer": "L'Espresso and Espresso Quattro are ideal for bold Italian-style espresso with rich aroma and strong body."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Which blend is best for cappuccino?",
+            "answer": "Il Cappuccino is crafted for a smooth, creamy cup that pairs beautifully with steamed milk."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer decaf coffee?",
+            "answer": "Yes, Il Decaf offers a smooth Italian-style coffee experience without caffeine."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What is the difference between whole bean and ground coffee?",
+            "answer": "Whole bean coffee keeps freshness longer and is best if you grind before brewing. Ground coffee is convenient and ready to brew."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Which product should I try first?",
+            "answer": "The Italian Coffee Sampler is a great choice if you want to explore multiple blends before choosing your favourite."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Is this suitable for filter coffee?",
+            "answer": "Yes, Il Filtro and Single Filter are designed for smooth, balanced filter-style brewing."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
