@@ -204,6 +204,7 @@
                 data-key="{{ item.key }}"
               >
                 {%- liquid
+                  assign cart_line = forloop.index
                   assign can_update_quantity = item.instructions.can_update_quantity
                     | default: true, allow_false: true
                   assign can_remove = item.instructions.can_remove | default: true, allow_false: true
@@ -286,7 +287,7 @@
                             product: item.product,
                             variant: item.variant,
                             in_cart_quantity: item.quantity,
-                            line_index: item.index,
+                            line_index: cart_line,
                             class: 'cart-primary-typography',
                             can_update_quantity: can_update_quantity
                           %}
@@ -294,7 +295,7 @@
                             class="button cart-items__remove"
                             type="button"
                             aria-label="{{ 'accessibility.remove_item' | t: title: item.title | escape }}"
-                            on:click="/onLineItemRemove/{{ item.index | plus: 1 }}"
+                            on:click="/onLineItemRemove/{{ cart_line }}"
                             {% if can_remove == false %}
                               hidden
                             {% endif %}
@@ -307,7 +308,7 @@
                       <div
                         class="cart-items__error hidden cart-items__error--drawer"
                         role="alert"
-                        ref="cartItemErrorContainer-{{ item.index | plus: 1 }}"
+                        ref="cartItemErrorContainer-{{ cart_line }}"
                       >
                         <div class="cart-item__error">
                           <span class="svg-wrapper">
@@ -315,7 +316,7 @@
                           </span>
                           <small
                             class="cart-item__error-text cart-primary-typography"
-                            ref="cartItemError-{{ item.index | plus: 1 }}"
+                            ref="cartItemError-{{ cart_line }}"
                           ></small>
                         </div>
                       </div>
@@ -476,7 +477,7 @@
                       product: item.product,
                       variant: item.variant,
                       in_cart_quantity: item.quantity,
-                      line_index: item.index,
+                      line_index: cart_line,
                       class: 'cart-primary-typography',
                       can_update_quantity: can_update_quantity
                     %}
@@ -485,7 +486,7 @@
                       class="button cart-items__remove"
                       type="button"
                       aria-label="{{ 'accessibility.remove_item' | t: title: item.title | escape }}"
-                      on:click="/onLineItemRemove/{{ item.index | plus: 1 }}"
+                      on:click="/onLineItemRemove/{{ cart_line }}"
                       {% assign can_remove = item.instructions.can_remove | default: true, allow_false: true %}
                       {% if can_remove == false %}
                         hidden
@@ -499,7 +500,7 @@
                 <td
                   class="cart-items__error hidden"
                   role="cell"
-                  ref="cartItemErrorContainer-{{ item.index | plus: 1 }}"
+                  ref="cartItemErrorContainer-{{ cart_line }}"
                   headers="quantity"
                 >
                   <div
@@ -511,7 +512,7 @@
                     </span>
                     <small
                       class="cart-item__error-text cart-primary-typography"
-                      ref="cartItemError-{{ item.index | plus: 1 }}"
+                      ref="cartItemError-{{ cart_line }}"
                     ></small>
                   </div>
                 </td>
@@ -872,12 +873,18 @@
   }
 
   /* Guard against legacy cart cells still being laid out by table parsing in the drawer. */
+  .cart-drawer .cart-items__table-row > td:nth-of-type(n + 3),
   .cart-drawer .cart-items__table-row > .cart-items__details:not(.cart-items__details--drawer) .cart-items__variants-wrapper,
   .cart-drawer .cart-items__table-row > .cart-items__details:not(.cart-items__details--drawer) .cart-items__unit-price-wrapper,
   .cart-drawer .cart-items__table-row > .cart-items__price,
   .cart-drawer .cart-items__table-row > .cart-items__quantity,
-  .cart-drawer .cart-items__table-row > .cart-items__error:not(.cart-items__error--drawer) {
-    display: none;
+  .cart-drawer .cart-items__table-row > .cart-items__error:not(.cart-items__error--drawer),
+  .cart-drawer .cart-items__variants-wrapper,
+  .cart-drawer .cart-items__unit-price-wrapper,
+  .cart-drawer td.cart-items__price,
+  .cart-drawer td.cart-items__quantity,
+  .cart-drawer td.cart-items__error:not(.cart-items__error--drawer) {
+    display: none !important;
   }
 
   .cart-drawer .cart-items__drawer-content {
