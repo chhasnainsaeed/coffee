@@ -81,13 +81,14 @@
 
 {% stylesheet %}
   .rito-product-showcase {
-    --rito-showcase-ink: #241713;
-    --rito-showcase-muted: rgb(36 23 19 / 0.62);
-    --rito-showcase-accent: #a8793a;
-    --rito-showcase-sage: #687361;
-    --rito-showcase-paper: #fbf6ed;
-    --rito-showcase-panel: #f2e7d7;
-    --rito-showcase-line: rgb(36 23 19 / 0.12);
+    --rito-showcase-ink: #2f2a27;
+    --rito-showcase-muted: rgb(47 42 39 / 0.58);
+    --rito-showcase-accent: #b68a62;
+    --rito-showcase-price: #9a6d48;
+    --rito-showcase-paper: #ffffff;
+    --rito-showcase-panel: #f6f3ef;
+    --rito-showcase-line: rgb(47 42 39 / 0.1);
+    --rito-showcase-sale: #ef3651;
 
     position: relative;
     isolation: isolate;
@@ -101,41 +102,56 @@
   }
 
   .rito-product-showcase .section-resource-list__header {
-    max-width: 1540px;
+    max-width: 1320px;
     width: 100%;
     margin: 0 auto;
-    padding-block-end: clamp(20px, 2.6vw, 32px);
-    border-bottom: 1px solid var(--rito-showcase-line);
+    padding-block-end: clamp(28px, 3.6vw, 46px);
+    text-align: center;
   }
 
   .rito-product-showcase .section-resource-list__header .group-block-content {
-    align-items: flex-end;
-    gap: clamp(18px, 3vw, 32px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
   }
 
   .rito-product-showcase .section-resource-list__header h3 {
     margin: 0;
-    max-width: 14ch;
+    max-width: none;
     color: var(--rito-showcase-ink);
-    font-family: var(--font-heading--family);
-    font-size: clamp(2.25rem, 4.4vw, 4.7rem);
-    line-height: 0.96;
-    letter-spacing: 0;
-    text-wrap: balance;
+    font-family: var(--font-subheading--family);
+    font-size: clamp(1.35rem, 2vw, 1.85rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .rito-product-showcase .section-resource-list__header h3::before {
-    content: 'Featured collection';
+    content: 'Best Seller';
     display: block;
-    width: fit-content;
-    margin-block-end: 12px;
+    margin-block-end: 8px;
     color: var(--rito-showcase-accent);
     font-family: var(--font-subheading--family);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     line-height: 1.4;
     text-transform: uppercase;
+  }
+
+  .rito-product-showcase .section-resource-list__header h3::after {
+    content: 'Best seller products this week';
+    display: block;
+    margin-block-start: 10px;
+    color: var(--rito-showcase-muted);
+    font-family: var(--font-paragraph--family);
+    font-size: 0.88rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.5;
+    text-transform: none;
   }
 
   .rito-product-showcase .section-resource-list__header .button,
@@ -145,27 +161,28 @@
   }
 
   .rito-product-showcase .section-resource-list__header a {
-    min-height: 42px;
-    padding: 0 16px;
-    border: 1px solid var(--rito-showcase-line);
-    border-radius: 999px;
+    min-height: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
     background: transparent;
-    color: var(--rito-showcase-ink);
+    color: var(--rito-showcase-accent);
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
+    font-weight: 700;
   }
 
   .rito-product-showcase .resource-list {
-    max-width: 1540px;
+    max-width: 1320px;
     margin: 0 auto;
   }
 
   .rito-product-showcase .resource-list--grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: clamp(16px, 2vw, 28px);
+    gap: clamp(22px, 2.8vw, 42px) clamp(18px, 2.4vw, 34px);
     align-items: stretch;
   }
 
@@ -177,36 +194,39 @@
 
   .rito-product-showcase .product-card {
     height: 100%;
-    transition: transform 180ms ease;
+    transition: translate 180ms ease;
   }
 
   .rito-product-showcase .product-card:hover {
-    transform: translateY(-3px);
+    translate: 0 -3px;
   }
 
   .rito-product-showcase .product-card__content {
     height: 100%;
-    gap: 12px;
+    gap: 10px;
     padding: 0;
     background: transparent;
+    align-items: center;
+    text-align: center;
   }
 
   .rito-product-showcase .card-gallery {
-    border-radius: 8px;
-    background:
-      linear-gradient(180deg, #f6ead8 0%, #e9dac5 100%);
-    box-shadow: 0 1px 0 rgb(255 255 255 / 0.72) inset;
+    width: 100%;
+    border-radius: 0;
+    background: var(--rito-showcase-panel);
+    box-shadow: none;
   }
 
   .rito-product-showcase .card-gallery img,
   .rito-product-showcase .card-gallery .product-card__image {
-    scale: 0.92;
+    scale: 0.86;
     object-fit: contain;
+    transition: scale 220ms ease;
   }
 
   .rito-product-showcase .product-card:hover .card-gallery img,
   .rito-product-showcase .product-card:hover .card-gallery .product-card__image {
-    scale: 0.96;
+    scale: 0.9;
   }
 
   .rito-product-showcase product-title,
@@ -214,20 +234,38 @@
   .rito-product-showcase .product-card h3,
   .rito-product-showcase .product-card h4 {
     color: var(--rito-showcase-ink);
-    font-family: var(--font-heading--family);
-    font-size: 1rem;
-    line-height: 1.18;
+    font-family: var(--font-subheading--family);
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1.25;
   }
 
   .rito-product-showcase product-price,
   .rito-product-showcase .price,
   .rito-product-showcase .h6 {
-    color: var(--rito-showcase-sage);
+    color: var(--rito-showcase-price);
+    font-size: 0.82rem;
     font-weight: 700;
   }
 
+  .rito-product-showcase .product-badges--top-right {
+    top: 0;
+    right: 0;
+  }
+
+  .rito-product-showcase .product-badges__badge--rectangle {
+    min-width: 54px;
+    padding: 7px 8px;
+    border-radius: 0;
+    background: var(--rito-showcase-sale);
+    color: #fff;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
   .rito-product-showcase .quick-add__button {
-    border-radius: 999px;
+    border-radius: 0;
     background: var(--rito-showcase-ink);
     color: var(--rito-showcase-paper);
   }
@@ -238,22 +276,21 @@
     }
 
     .rito-product-showcase .section-resource-list__header .group-block-content {
-      align-items: flex-start;
-      gap: 18px;
+      align-items: center;
+      gap: 10px;
     }
 
     .rito-product-showcase .section-resource-list__header h3 {
-      max-width: 12ch;
-      font-size: clamp(2.25rem, 11vw, 3.5rem);
+      font-size: clamp(1.35rem, 6vw, 1.75rem);
     }
 
     .rito-product-showcase .resource-list--grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 24px 14px;
     }
 
     .rito-product-showcase .product-card__content {
-      padding: 8px 8px 12px;
+      padding: 0;
     }
   }
 {% endstylesheet %}
