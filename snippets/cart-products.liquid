@@ -206,8 +206,14 @@
                 {%- liquid
                   assign cart_line = forloop.index
                   assign can_update_quantity = item.instructions.can_update_quantity
-                    | default: true, allow_false: true
-                  assign can_remove = item.instructions.can_remove | default: true, allow_false: true
+                  if can_update_quantity == nil
+                    assign can_update_quantity = true
+                  endif
+
+                  assign can_remove = item.instructions.can_remove
+                  if can_remove == nil
+                    assign can_remove = true
+                  endif
 
                   if settings.currency_code_enabled_cart_items
                     assign price = item.final_line_price | money_with_currency
@@ -462,9 +468,11 @@
                   role="cell"
                   headers="quantity"
                 >
-                  {% # Here I want to pass some arguments to the quantity block so it knows which value should the input be set to. Though quantity block could be a snippet instead %}
-                  {% assign can_update_quantity = item.instructions.can_update_quantity
-                    | default: true, allow_false: true
+                  {% liquid
+                    assign can_update_quantity = item.instructions.can_update_quantity
+                    if can_update_quantity == nil
+                      assign can_update_quantity = true
+                    endif
                   %}
                   <div class="cart-items__quantity-controls">
                     {% render 'volume-pricing-info',
@@ -487,7 +495,12 @@
                       type="button"
                       aria-label="{{ 'accessibility.remove_item' | t: title: item.title | escape }}"
                       on:click="/onLineItemRemove/{{ cart_line }}"
-                      {% assign can_remove = item.instructions.can_remove | default: true, allow_false: true %}
+                      {% liquid
+                        assign can_remove = item.instructions.can_remove
+                        if can_remove == nil
+                          assign can_remove = true
+                        endif
+                      %}
                       {% if can_remove == false %}
                         hidden
                       {% endif %}
