@@ -871,6 +871,15 @@
     color: #7a6a5c;
   }
 
+  /* Guard against legacy cart cells still being laid out by table parsing in the drawer. */
+  .cart-drawer .cart-items__table-row > .cart-items__details:not(.cart-items__details--drawer) .cart-items__variants-wrapper,
+  .cart-drawer .cart-items__table-row > .cart-items__details:not(.cart-items__details--drawer) .cart-items__unit-price-wrapper,
+  .cart-drawer .cart-items__table-row > .cart-items__price,
+  .cart-drawer .cart-items__table-row > .cart-items__quantity,
+  .cart-drawer .cart-items__table-row > .cart-items__error:not(.cart-items__error--drawer) {
+    display: none;
+  }
+
   .cart-drawer .cart-items__drawer-content {
     display: flex;
     flex-direction: column;
