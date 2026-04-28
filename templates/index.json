@@ -344,12 +344,63 @@
         "button_label": "Explore Our Coffee",
         "button_link": "shopify://collections/all"
       }
+    },
+    "rito_brewing_rituals_k8Lm2Q": {
+      "type": "rito-brewing-rituals",
+      "blocks": {
+        "method_1": {
+          "type": "method",
+          "settings": {
+            "title": "Espresso",
+            "description": "Rich, bold, and intense with a golden crema.",
+            "best_for": "L'Espresso"
+          }
+        },
+        "method_2": {
+          "type": "method",
+          "settings": {
+            "title": "Cappuccino",
+            "description": "Smooth, creamy, and perfect with steamed milk.",
+            "best_for": "Il Cappuccino"
+          }
+        },
+        "method_3": {
+          "type": "method",
+          "settings": {
+            "title": "Filter Coffee",
+            "description": "Clean, balanced, and ideal for everyday brewing.",
+            "best_for": "Il Filtro"
+          }
+        },
+        "method_4": {
+          "type": "method",
+          "settings": {
+            "title": "Turkish Style",
+            "description": "Deep, aromatic, and traditionally prepared.",
+            "best_for": "Il Sultano"
+          }
+        }
+      },
+      "block_order": [
+        "method_1",
+        "method_2",
+        "method_3",
+        "method_4"
+      ],
+      "name": "Rito Brewing Rituals",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "BREWING RITUALS",
+        "heading": "Brew It Your Way",
+        "subheading": "From bold espresso to smooth filter coffee, discover the perfect brewing ritual for every Rito Del Caffe blend."
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
     "product_list_fa6P9H",
     "coffee_types_9Hk2Lm",
-    "rito_brand_story_m4Kd2P"
+    "rito_brand_story_m4Kd2P",
+    "rito_brewing_rituals_k8Lm2Q"
   ]
 }
