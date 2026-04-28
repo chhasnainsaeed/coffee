@@ -220,17 +220,136 @@
         "rows_gap": 40,
         "icons_style": "arrow",
         "icons_shape": "none",
-        "section_width": "page-width",
+        "section_width": "full-width",
         "horizontal_alignment": "flex-start",
         "gap": 28,
         "color_scheme": "scheme-1",
         "padding-block-start": 58,
         "padding-block-end": 70
       }
+    },
+    "coffee_types_9Hk2Lm": {
+      "type": "coffee-type-categories",
+      "blocks": {
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "title": "Whole Bean Coffee",
+            "description": "Rich, aromatic beans for customers who want the freshest grind at home.",
+            "button_label": "Explore Whole Beans"
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "title": "Espresso Blends",
+            "description": "Dark, balanced blends crafted for a dense crema and a smooth Italian finish.",
+            "button_label": "Shop Now"
+          }
+        },
+        "category_3": {
+          "type": "category",
+          "settings": {
+            "title": "Ground Coffee",
+            "description": "Convenient and flavorful coffee prepared for easy brewing without compromise.",
+            "button_label": "Shop Now"
+          }
+        },
+        "category_4": {
+          "type": "category",
+          "settings": {
+            "title": "Filter Coffee",
+            "description": "Clean, layered profiles tailored for pour-over, drip, and everyday slow brewing.",
+            "button_label": "Shop Now"
+          }
+        },
+        "category_5": {
+          "type": "category",
+          "settings": {
+            "title": "Decaf Coffee",
+            "description": "Full-bodied taste with a softer caffeine profile for evening rituals and gentle cups.",
+            "button_label": "Shop Now"
+          }
+        },
+        "category_6": {
+          "type": "category",
+          "settings": {
+            "title": "Sampler Packs",
+            "description": "A curated tasting journey through signature blends, origins, and roast expressions.",
+            "button_label": "Build Your Sampler"
+          }
+        }
+      },
+      "block_order": [
+        "category_1",
+        "category_2",
+        "category_3",
+        "category_4",
+        "category_5",
+        "category_6"
+      ],
+      "name": "Coffee Types",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "EXPLORE CATEGORIES",
+        "heading": "Shop by Coffee Type",
+        "subheading": "Discover Italian coffee crafted for your ritual — from bold espresso to smooth filter blends and curated sampler packs."
+      }
+    },
+    "rito_brand_story_m4Kd2P": {
+      "type": "rito-brand-story",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "title": "Italian Inspired Blends",
+            "text": "Crafted for authentic espresso, cappuccino, and smooth daily coffee rituals."
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "title": "Premium Roast Profiles",
+            "text": "Balanced roast levels designed for aroma, body, and rich crema."
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "title": "Freshly Selected Coffee",
+            "text": "Carefully selected blends for consistent taste and quality."
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "title": "Made for Every Ritual",
+            "text": "From bold espresso to smooth filter coffee and sampler packs."
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4"
+      ],
+      "name": "Rito Brand Story",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "Quality promise",
+        "heading": "Why Rito Del Caffe 1937?",
+        "subheading": "Inspired by Italian coffee tradition, crafted for rich aroma, smooth taste, and everyday rituals.",
+        "body_text": "Every blend is created to bring the richness of Italian coffee culture into your daily ritual - from bold espresso moments to smooth, comforting cups.",
+        "button_label": "Explore Our Coffee",
+        "button_link": "shopify://collections/all"
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "product_list_fa6P9H",
+    "coffee_types_9Hk2Lm",
+    "rito_brand_story_m4Kd2P"
   ]
 }
