@@ -11,6 +11,10 @@
 
 {% liquid
   assign block_settings = block.settings
+  assign is_drawer = false
+  if drawer_context == 'drawer'
+    assign is_drawer = true
+  endif
 %}
 
 <script
@@ -42,15 +46,43 @@
         {{ 'actions.log_in_html' | t: link: routes.account_login_url }}
       </p>
     {%- endif -%}
-
-    <a
-      class="button cart-items__empty-button"
-      href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
-    >
-      <span class="button-text">
-        {{ 'actions.continue_shopping' | t }}
-      </span>
-    </a>
+    {% if is_drawer %}
+      <div class="cart-drawer-empty-state" aria-live="polite">
+        <div class="cart-drawer-empty-state__visual" aria-hidden="true">
+          <svg viewBox="0 0 220 220" role="presentation">
+            <defs>
+              <linearGradient id="cart-drawer-empty-bg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#f6ede2"/>
+                <stop offset="100%" stop-color="#ead8c0"/>
+              </linearGradient>
+            </defs>
+            <rect x="24" y="24" width="172" height="172" rx="32" fill="url(#cart-drawer-empty-bg)"/>
+            <ellipse cx="110" cy="164" rx="52" ry="14" fill="#d8bea0"/>
+            <path d="M79 70c0-12 9-21 21-21h20c12 0 21 9 21 21v88c0 13-11 24-24 24h-14c-13 0-24-11-24-24V70z" fill="#8b5e3c"/>
+            <path d="M90 77h40v74c0 10-8 18-18 18h-4c-10 0-18-8-18-18V77z" fill="#bb8d5c"/>
+            <rect x="96" y="100" width="28" height="42" rx="6" fill="#f7f0e5"/>
+            <circle cx="110" cy="87" r="6" fill="#c69b57"/>
+          </svg>
+        </div>
+        <h3 class="cart-drawer-empty-state__title">Your cart is waiting for coffee</h3>
+        <p class="cart-drawer-empty-state__text">Add your favourite Italian-inspired blend to begin your ritual.</p>
+        <a
+          class="cart-drawer-empty-state__button"
+          href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
+        >
+          Shop Coffee
+        </a>
+      </div>
+    {% else %}
+      <a
+        class="button cart-items__empty-button"
+        href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
+      >
+        <span class="button-text">
+          {{ 'actions.continue_shopping' | t }}
+        </span>
+      </a>
+    {% endif %}
   {%- else -%}
     <span
       class="visually-hidden"
@@ -122,6 +154,48 @@
 
           <tbody role="rowgroup">
             {% for item in cart.items %}
+              {% liquid
+                assign drawer_subtitle = item.product.metafields.custom.subtitle.value | default: item.product.metafields.custom.subtitle
+                assign drawer_type = item.product.metafields.custom.coffee_type.value | default: item.product.metafields.custom.coffee_type
+                assign drawer_weight = item.product.metafields.custom.net_weight.value | default: item.product.metafields.custom.net_weight
+
+                case item.product.handle
+                  when 'il-cappuccino'
+                    assign drawer_type_fallback = 'Whole Bean'
+                    assign drawer_weight_fallback = '8.8 OZ'
+                    assign drawer_subtitle_fallback = 'Rich & Creamy Italian Blend'
+                  when 'l-espresso', 'lespresso', 'the-espresso', 'espresso'
+                    assign drawer_type_fallback = 'Whole Bean'
+                    assign drawer_weight_fallback = '8.8 OZ'
+                    assign drawer_subtitle_fallback = 'Bold & Intense Italian Blend'
+                  when 'il-decaf'
+                    assign drawer_type_fallback = 'Whole Bean'
+                    assign drawer_weight_fallback = '8.8 OZ'
+                    assign drawer_subtitle_fallback = 'Smooth Italian Decaffeinated Blend'
+                  when 'il-filtro', 'the-filter'
+                    assign drawer_type_fallback = 'Whole Bean'
+                    assign drawer_weight_fallback = '8.8 OZ'
+                    assign drawer_subtitle_fallback = 'Smooth Filter Coffee Blend'
+                  when 'italian-coffee-sampler', 'sampler-product'
+                    assign drawer_type_fallback = 'Sampler'
+                    assign drawer_weight_fallback = 'Pack'
+                    assign drawer_subtitle_fallback = 'A Curated Selection of Premium Italian Blends'
+                  else
+                    assign drawer_type_fallback = 'Whole Bean'
+                    assign drawer_weight_fallback = '8.8 OZ'
+                    assign drawer_subtitle_fallback = 'Crafted for rich aroma and smooth taste.'
+                endcase
+
+                if drawer_subtitle == blank
+                  assign drawer_subtitle = drawer_subtitle_fallback
+                endif
+                if drawer_type == blank
+                  assign drawer_type = drawer_type_fallback
+                endif
+                if drawer_weight == blank
+                  assign drawer_weight = drawer_weight_fallback
+                endif
+              %}
               <tr
                 role="row"
                 class="cart-items__table-row{% if item.parent_relationship.parent != null %} cart-items__nested-line{% endif %}{% unless item.unit_price_measurement %} cart-items__table-row--full-width-variants{% endunless %}"
@@ -195,6 +269,13 @@
                         {%- endfor -%}
                       </ul>
                     {%- endif -%}
+
+                    {% if is_drawer %}
+                      <p class="cart-items__drawer-meta">
+                        {{ drawer_weight | upcase }}{% if drawer_type != blank %}, {{ drawer_type }}{% endif %}
+                      </p>
+                      <p class="cart-items__drawer-unit-price">{{ item.final_price | money }}</p>
+                    {% endif %}
                   </div>
 
                   <div class="cart-items__variants-wrapper">
@@ -554,6 +635,20 @@
     margin-block-start: calc((var(--font-size--md) - 1lh) / 2);
   }
 
+  .cart-items__drawer-meta {
+    margin-top: 6px;
+    color: #7a6a5c;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .cart-items__drawer-unit-price {
+    margin-top: 6px;
+    color: #9a6a43;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
   .cart-items__variants {
     display: block;
   }
@@ -642,6 +737,203 @@
     object-position: center center;
     width: 100%;
     height: auto;
+  }
+
+  .cart-drawer .cart-items__wrapper {
+    width: 100%;
+  }
+
+  .cart-drawer .cart-items {
+    width: 100%;
+  }
+
+  .cart-drawer .cart-items__table-row {
+    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'media details'
+      'media quantity';
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #e8ded2;
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 16px 40px rgba(42, 27, 18, 0.06);
+  }
+
+  .cart-drawer .cart-items__media-container {
+    width: 92px;
+    height: 112px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #f7efe5 0%, #efe1d1 100%);
+  }
+
+  .cart-drawer .cart-items__media-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    transform: scale(1.08);
+  }
+
+  .cart-drawer .cart-items__details {
+    color: #7a6a5c;
+  }
+
+  .cart-drawer .cart-items__details * {
+    font-size: initial;
+  }
+
+  .cart-drawer .cart-items__title {
+    margin: 0 0 5px;
+    color: #20140e;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-transform: none;
+  }
+
+  .cart-drawer .cart-items__variants-wrapper {
+    margin-top: 0;
+  }
+
+  .cart-drawer .cart-items__variants,
+  .cart-drawer .cart-items__properties,
+  .cart-drawer .cart-items__bundle,
+  .cart-drawer .cart-items__variants-wrapper p {
+    color: #7a6a5c;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .cart-drawer .cart-items__quantity {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .cart-drawer .cart-items__quantity-controls {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cart-drawer .cart-items__quantity-controls > .volume-pricing-info {
+    display: none;
+  }
+
+  .cart-drawer .cart-items__quantity .quantity-selector {
+    height: 40px;
+    border: 1px solid #e8ded2;
+    border-radius: 999px;
+    background: #f8f3ec;
+    overflow: hidden;
+  }
+
+  .cart-drawer .cart-items__quantity .quantity-selector button {
+    width: 38px;
+    height: 40px;
+    color: #2a1b12;
+  }
+
+  .cart-drawer .cart-items__quantity .quantity-selector button:hover,
+  .cart-drawer .cart-items__quantity .quantity-selector button:focus-visible {
+    background: #efe1d1;
+  }
+
+  .cart-drawer .cart-items__quantity .quantity-selector input {
+    min-width: 34px;
+    color: #20140e;
+    font-weight: 700;
+    text-align: center;
+    background: transparent;
+  }
+
+  .cart-drawer .cart-items__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #e8ded2;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #7a6a5c;
+  }
+
+  .cart-drawer .cart-items__remove:hover,
+  .cart-drawer .cart-items__remove:focus-visible {
+    background: #2a1b12;
+    color: #ffffff;
+  }
+
+  .cart-drawer .cart-items__price {
+    min-width: unset;
+    margin-top: 12px;
+    color: #20140e;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: right;
+  }
+
+  .cart-drawer .cart-items__price-unit {
+    display: none;
+  }
+
+  .cart-drawer-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .cart-drawer-empty-state__visual {
+    width: 180px;
+    margin-bottom: 18px;
+  }
+
+  .cart-drawer-empty-state__visual svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .cart-drawer-empty-state__title {
+    margin: 0;
+    color: #20140e;
+    font-family: var(--font-heading--family);
+    font-size: 28px;
+    line-height: 1.1;
+  }
+
+  .cart-drawer-empty-state__text {
+    margin: 12px 0 0;
+    color: #7a6a5c;
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 28ch;
+  }
+
+  .cart-drawer-empty-state__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 220px;
+    height: 52px;
+    margin-top: 18px;
+    border-radius: 999px;
+    background: #2a1b12;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .cart-drawer-empty-state__button:hover,
+  .cart-drawer-empty-state__button:focus-visible {
+    background: #b88746;
   }
 
   .cart-items__empty-button {
@@ -927,6 +1219,17 @@
     to {
       filter: none;
       opacity: 1;
+    }
+  }
+
+  @media screen and (max-width: 639px) {
+    .cart-drawer .cart-items__table-row {
+      grid-template-columns: 82px minmax(0, 1fr);
+    }
+
+    .cart-drawer .cart-items__media-container {
+      width: 82px;
+      height: 100px;
     }
   }
 {% endstylesheet %}
